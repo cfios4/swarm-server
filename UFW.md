@@ -1,11 +1,11 @@
 # UFW
 
-Example UFW commands:
-`ufw allow in on enp6s18 to any app "WWW Full" comment 'HTTP/s'`
-`ufw allow in on tailscale0 to any app "Docker Swarm" comment 'Docker Swarm over Tailscale'`
-`ufw allow in on tailscale0 to any app "Tailscale" comment 'Tailscale'`
-`ufw allow app Plex comment 'Plex'`
-`ufw limit ssh comment 'Remote shell'`
+Example UFW commands: \
+`ufw allow in on enp6s18 to any app "WWW Full" comment 'HTTP/s'` \
+`ufw allow in on tailscale0 to any app "Docker Swarm" comment 'Docker Swarm over Tailscale'` \
+`ufw allow in on tailscale0 to any app "Tailscale" comment 'Tailscale'` \
+`ufw allow app Plex comment 'Plex'` \
+`ufw limit ssh comment 'Remote shell'` 
 
 Folder Location:
 `/etc/ufw/applications.d/ufw-swarmtailscale`
