@@ -10,6 +10,7 @@ Example UFW commands: \
 Folder Location:
 `/etc/ufw/applications.d/ufw-swarmtailscale`
 ```ini
+cat <<EOF > /etc/ufw/applications.d/ufw-swarmtailscale
 [Docker Swarm]
 title=Docker Swarm
 description=Communication for Swarm cluster
@@ -24,4 +25,5 @@ ports=41641/udp
 title=Plex
 description=Plex
 ports=32400/tcp
+EOF
 ```
