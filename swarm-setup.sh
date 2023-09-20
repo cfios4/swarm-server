@@ -1,5 +1,10 @@
 #!/bin/bash
 
+## Vars
+node1=
+node2=
+node3=
+
 ## Node 0
 # Setup
 apk update
