@@ -14,6 +14,9 @@ rc-update add docker boot
 service docker start
 mkdir -p /mnt/cluster/{appdata,media}
 
+ssh-keygen -b 2048 -t rsa -f .ssh/id_rsa -q -N ""
+ssh-copy-id swarm@node{1..3}
+
 cat <<EOF > /etc/hosts
 $node1       node1
 $node2       node2
