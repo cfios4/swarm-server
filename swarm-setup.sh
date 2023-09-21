@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ## Vars
+node0=$(hostanme -i)
 node1=
 node2=
 node3=
@@ -13,6 +14,12 @@ rc-update add docker boot
 service docker start
 mkdir -p /mnt/cluster/{appdata,media}
 
+cat <<EOF > /etc/hosts
+$node1       node1
+$node2       node2
+$node3       node3
+EOF
+
 # Initialize Docker Swarm and get manager join token
 docker swarm init --advertise-addr tailscale0
 tailscaleip=$(tailscale ip -4)
@@ -23,7 +30,7 @@ apk add glusterfs glusterfs-server
 rc-update add glusterd
 service glusterd start
 
-# Join additional nodes to the Swarm and get worker join token
+# Get worker join token
 worker_token=$(docker swarm join-token worker -q)
 
 ## Node 1
@@ -35,6 +42,12 @@ apk add docker
 rc-update add docker boot
 service docker start
 
+cat <<EOF > /etc/hosts
+$node0       node0
+$node2       node2
+$node3       node3
+EOF
+
 # Join the Swarm as a worker using the manager token
 docker swarm join --token $manager_token $tailscaleip:2377
 
@@ -44,7 +57,7 @@ rc-update add glusterd
 service glusterd start
 
 # Join the GlusterFS cluster on Node 2
-gluster peer probe Node0
+gluster peer probe node0
 EOF
 
 ## Node 2
@@ -56,6 +69,12 @@ apk add docker
 rc-update add docker boot
 service docker start
 
+cat <<EOF > /etc/hosts
+$node0       node0
+$node1       node1
+$node3       node3
+EOF
+
 # Join the Swarm as a worker using the manager token
 docker swarm join --token $manager_token $tailscaleip:2377
 
@@ -65,7 +84,7 @@ rc-update add glusterd
 service glusterd start
 
 # Join the GlusterFS cluster on Node 3
-gluster peer probe Node0
+gluster peer probe node0
 EOF
 
 ## Node 3
@@ -77,16 +96,22 @@ apk add docker
 rc-update add docker boot
 service docker start
 
+cat <<EOF > /etc/hosts
+$node0       node0
+$node1       node1
+$node2       node2
+EOF
+
 # Join the Swarm as a worker using the worker token
 docker swarm join --token $worker_token $tailscaleip:2377
 
-# Initialize GlusterFS on Node 4
+# Initialize GlusterFS on Node 3
 apk add glusterfs glusterfs-server
 rc-update add glusterd
 service glusterd start
 
-# Join the GlusterFS cluster on Node 4
-gluster peer probe Node0
+# Join the GlusterFS cluster on Node 3
+gluster peer probe node0
 EOF
 
 ## Back to Node 0
