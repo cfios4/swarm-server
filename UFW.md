@@ -9,7 +9,7 @@ Example UFW commands: \
 
 Folder Location:
 `/etc/ufw/applications.d/ufw-swarmtailscale`
-```ini
+```bash
 cat <<EOF > /etc/ufw/applications.d/ufw-swarmtailscale
 [Docker Swarm]
 title=Docker Swarm
