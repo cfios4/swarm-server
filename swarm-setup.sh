@@ -122,8 +122,8 @@ EOF
 ## Probe nodes back
 gluster peer probe node{1..3}
 # Create GlusterFS volumes for appdata and media
-gluster volume create appdata replica 4 node{1..3}:/mnt/cluster/appdata 
-gluster volume create media distributed node{1..3}:/mnt/cluster/media
+gluster volume create appdata replica 4 node{0..3}:/mnt/cluster/appdata 
+gluster volume create media distributed node{0..3}:/mnt/cluster/media
 # Start GlusterFS volumes
 gluster volume start appdata
 gluster volume start media
