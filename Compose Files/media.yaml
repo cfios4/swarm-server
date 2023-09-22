@@ -1,0 +1,84 @@
+---
+version: "3.8"
+  
+services:
+ 
+  plex:
+    image: plexinc/pms-docker:latest
+    deploy:
+      replicas: 1
+    networks:
+      - ${OVERLAY_NETWORK}
+    environment:
+      PLEX_CLAIM: ${PLEX_CLAIM} #https://plex.tv/claim
+      ADVERTISE_IP: https://${HOSTNAME}.lan:32400,https://${TAILSCALEIP}:32400,https://watch.${DOMAIN}:443
+      ALLOWED_NETWORKS: ${SUBNET},100.64.0.0/255.192.0.0,10.0.0.0/255.0.0.0
+    volumes:
+      - ${APP_MNT}/plex:/config
+      - ${MEDIA_MNT}:/media:ro
+    tmpfs:
+      - /transcode
+    labels:
+      - flame.type=app
+      - flame.name=Plex
+      - flame.icon=plex
+      - flame.url=https://watch.${DOMAIN}/
+  
+  radarr:
+    image: hotio/radarr:latest
+    deploy:
+      replicas: 1
+    networks:
+      - ${OVERLAY_NETWORK}
+    depends_on:
+      - sabnzbd
+    volumes:
+      - ${APP_MNT}/radarr:/config
+      - ${MEDIA_MNT}:/data
+    labels:
+      - flame.type=app
+      - flame.name=Radarr
+      - flame.icon=movie-open
+      - flame.url=https://watch.${DOMAIN}/radarr/
+      - flame.visibility=hidden
+  
+  sonarr:
+    image: hotio/sonarr:latest
+    deploy:
+      replicas: 1
+    networks:
+      - ${OVERLAY_NETWORK}
+    depends_on:
+      - sabnzbd
+    volumes:
+      - ${APP_MNT}/sonarr:/config
+      - ${MEDIA_MNT}:/data
+    labels:
+      - flame.type=app
+      - flame.name=Sonarr
+      - flame.icon=youtube-tv
+      - flame.url=https://watch.${DOMAIN}/sonarr/
+      - flame.visibility=hidden
+  
+  sabnzbd:
+    image: hotio/sabnzbd:latest
+    deploy:
+      replicas: 1
+    networks:
+      - ${OVERLAY_NETWORK}
+    volumes:
+      - ${APP_MNT}/sabnzbd:/config
+      - ${MEDIA_MNT}:/data
+    configs:
+	  sabnzbd_config:
+        file: /config/sabnzbd.ini
+    labels:
+      - flame.type=app
+      - flame.name=Sabnzbd
+      - flame.icon=cloud-download
+      - flame.url=https://watch.${DOMAIN}/sabnzbd/
+      - flame.visibility=hidden
+
+networks:
+  ${OVERLAY_NETWORK}:
+    external: true

@@ -1,0 +1,146 @@
+---
+version: "3.8"
+  
+services:
+  
+  pairdrop:
+    image: linuxserver/pairdrop:latest
+    deploy:
+      replicas: 1
+    networks:
+      - ${OVERLAY_NETWORK}
+    tmpfs:
+      - /config
+    labels:
+      - flame.type=app
+      - flame.name=Pairdrop
+      - flame.icon=share-variant
+      - flame.url=https://drop.${DOMAIN}/
+  
+  nextcloud:
+    image: nextcloud:latest
+    deploy:
+      replicas: 1
+    networks:
+      - ${OVERLAY_NETWORK}
+    environment:
+      NEXTCLOUD_TRUSTED_DOMAIN=cloud.${DOMAIN}
+      SQLITE_DATABASE=nextcloud
+   #    MYSQL_PASSWORD=nextcloud
+   #    MYSQL_DATABASE=nextcloud
+   #    MYSQL_USER=nextcloud
+   #    MYSQL_${HOST_NETWORK}=mysql
+    volumes:
+      - ${APP_MNT}/nextcloud:/var/www/html
+    labels:
+      - flame.type=app
+      - flame.name=Cloud
+      - flame.icon=cloud
+      - flame.url=https://cloud.${DOMAIN}/
+  
+  onlyoffice:
+    image: onlyoffice/documentserver:latest
+    deploy:
+      replicas: 1
+    networks:
+      - ${OVERLAY_NETWORK}
+    tmpfs:
+      - /var/log/onlyoffice
+
+  microbin:
+    image: danielszabo99/microbin:latest
+    networks:
+      - ${OVERLAY_NETWORK}
+    environment:
+      MICROBIN_ADMIN_USERNAME: admin
+      MICROBIN_ADMIN_PASSWORD: changeme
+      MICROBIN_EDITABLE: 'true'
+      MICROBIN_HIGHLIGHTSYNTAX: 'true'
+      MICROBIN_PORT: 80
+      MICROBIN_BIND: 0.0.0.0
+      MICROBIN_PRIVATE: 'true'
+      MICROBIN_PUBLIC_PATH: https://bin.${DOMAIN}/
+      MICROBIN_SHOW_READ_STATS: 'true'
+      MICROBIN_TITLE: cafio
+      MICROBIN_ENABLE_BURN_AFTER: 'true'
+      MICROBIN_WIDE: 'true'
+      MICROBIN_QR: 'true'
+      MICROBIN_EXTERNAL_PASTA: 'true'
+      MICROBIN_ENABLE_READONLY: 'true'
+      MICROBIN_ENCRYPTION_CLIENT_SIDE: 'true'
+      MICROBIN_ENCRYPTION_SERVER_SIDE: 'true'
+      MICROBIN_DISABLE_TELEMETRY: 'true'
+    volumes:
+      - ${APP_MNT}/microbin:/app/microbin_data
+    labels:
+      - flame.type=app
+      - flame.name=Microbin
+      - flame.icon=delete-variant
+      - flame.url=https://bin.${DOMAIN}/
+  
+  vscode:
+    image: linuxserver/vscodium:latest
+    deploy:
+      replicas: 1
+    networks:
+      - ${OVERLAY_NETWORK}
+    volumes:
+      - ${APP_MNT}/vscode:/config
+    labels:
+      - flame.type=app
+      - flame.name=VSCode
+      - flame.icon=microsoft-visual-studio
+      - flame.url=https://code.${DOMAIN}/
+
+  vaultwarden:
+    image: vaultwarden/server:latest
+    deploy:
+      replicas: 1
+    networks:
+      - ${OVERLAY_NETWORK}
+    environment:
+      DOMAIN: https://vault.${DOMAIN}/
+      SENDS_ALLOWED: 'true'
+      EMERGENCY_ACCESS_ALLOWED: 'true'
+      WEB_VAULT_ENABLED: 'true'
+      SIGNUPS_ALLOWED: 'false'
+      SIGNUPS_VERIFY: 'false'
+      SIGNUPS_DOMAINS_WHITELIST: ${DOMAIN}
+      YUBICO_CLIENT_ID: 92307
+      YUBICO_SECRET_KEY: 72o9iOvaz1yUO+6MomnE7EkPNgw=
+    volumes:
+      - ${APP_MNT}/vaultwarden:/data
+    labels:
+      - flame.type=app
+      - flame.name=Microbin
+      - flame.icon=lock
+      - flame.url=https://vault.${DOMAIN}/
+
+  gitea:
+    image: gitea/gitea:latest
+    deploy:
+      replicas: 1
+    networks:
+      - ${OVERLAYNET}
+    environment:
+      PROTOCOL: https
+      DOMAIN: ${DOMAIN}
+      HTTP_PORT: 3000
+      APP_NAME: Gitea
+      SHOW_USER_EMAIL: false
+      REVERSE_PROXY_TRUSTED_PROXIES: 127.0.0.0/8,::1/128, 192.168.45.0/24, cafio.co
+      EMAIL_DOMAIN_ALLOWLIST: ${DOMAIN}
+    volumes:
+      - ${APP_MNT}/gitea/config:/etc/gitea
+      - ${APP_MNT}/gitea/data:/var/lib/gitea
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    lables:
+      - flame.type=app
+      - flame.name=Microbin
+      - flame.icon=git
+      - flame.url=https://git.${DOMAIN}/
+
+networks:
+  ${OVERLAY_NETWORK}:
+    external: true
