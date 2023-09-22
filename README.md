@@ -12,7 +12,7 @@ There are 3 seperate stacks of services:
     - This stack deploys anything related to the media server portion.
 
 I want the have these stacks deployed like this: `curl https://github.com/raw/.../compose.yaml | docker stack up -c - initial`. \
-The stack yamls will need to be recreated in the Git repo to just be the yaml as opposed to [detailed version](https://git.cafio.co/casey/swarm-server/src/commit/0a699d4e96c83b28e40b68bbc9828bb2e1b3d2be/Compose%20File%28s%29.md)
+The stack yamls will need to be recreated in the Git repo to just be the yaml as opposed to [detailed version]([https://git.cafio.co/casey/swarm-server/src/commit/0a699d4e96c83b28e40b68bbc9828bb2e1b3d2be/Compose%20File%28s%29.md](https://github.com/cfios4/swarm-server/blob/main/Compose%20Files/Stacks.md))
 
 ## UFW
 `Uncomplicated Firewall` is a simple `iptables` frontend. The provided code should be put into a file at `/etc/ufw/applications.d/ufw-swarmtailscale`. This creates profiles when using `ufw app list` and makes it simpler to allow the correct ports.
