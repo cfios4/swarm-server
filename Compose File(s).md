@@ -380,7 +380,7 @@ services:
       - ${APP_MNT}/sabnzbd:/config
       - ${MEDIA_MNT}:/data
     configs:
-	  sabnzbd_config:
+        sabnzbd_config:
         file: /config/sabnzbd.ini
     labels:
       - flame.type=app
