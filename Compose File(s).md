@@ -45,8 +45,8 @@ services:
          reverse_proxy flame:5005
        }
 
-	   # DoH
-	   agh.${DOMAIN} {
+       # DoH
+       agh.${DOMAIN} {
          handle /super_secret_password {
            rewrite /super_secret_password /dns-query
            reverse_proxy https://192.168.45.254:53 {
