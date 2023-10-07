@@ -1,0 +1,70 @@
+# System installation information
+install
+text
+keyboard --vckeymap=us --xlayouts='us'
+rootpw --iscrypted $6$AYTdrBgXy4.eDj3k$Sxd3ljcxIfAB67DLbPy4sjcNcDMY7fJWAHRIqT9.p6FoRWUgSzZvoZgH5UQ5jIoi64AkXaiKowyaVkKCzZJ0e0
+
+# Additional repositories
+repo --name=base --baseurl=http://download.example/pub/fedora/linux/releases/38/Everything/x86_64/os/
+repo --name=tailscale --baseurl=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+repo --name=docker --baseurl=https://download.docker.com/linux/fedora/docker-ce.repo
+
+# Set up networking and hostname
+network --hostname=node0
+#network --hostname=node1
+#network --hostname=node2
+#network --hostname=node3
+
+# Exclude firewalld package
+%packages
+-firewalld
+
+# Install Docker, Tailscale, and UFW
+docker-ce
+docker-ce-rootless-extras
+docker-ce-cli
+containerd.io 
+docker-compose-plugin
+tailscale
+ufw
+
+%post
+# Enable and start Docker service
+systemctl enable docker
+systemctl start docker
+
+# Enable and start Tailscale
+systemctl enable tailscaled
+systemctl start tailscaled
+
+# Enable and start UFW
+systemctl enable ufw
+systemctl start ufw
+
+# Create custom UFW apps
+cat <<EOF > /etc/ufw/applications.d/ufw-swarmtailscale
+[Docker Swarm]
+title=Docker Swarm
+description=Communication for Swarm cluster
+ports=2377/tcp|7946/tcp,udp|4789/udp
+
+[Tailscale]
+title=Tailscale
+description=Tailscale
+ports=41641/udp
+
+[Plex]
+title=Plex
+description=Plex
+ports=32400/tcp
+EOF
+
+# Enable UFW rules for Tailscale network interface
+ufw allow in on enp6s18 to any app "WWW Full" comment 'HTTP/s'
+ufw allow in on tailscale0 to any app "Docker Swarm" comment 'Docker Swarm over Tailscale'
+ufw allow in on tailscale0 to any app "Tailscale" comment 'Tailscale'
+ufw allow app Plex comment 'Plex'
+ufw limit ssh comment 'Remote shell'
+
+# Reboot the system
+reboot
