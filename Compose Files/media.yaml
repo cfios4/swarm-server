@@ -16,7 +16,7 @@ services:
       - ALLOWED_NETWORKS
     volumes:
       - plex:/config
-      - ${MEDIA_MNT}:/media:ro
+      - media:/media:ro
     tmpfs:
       - /transcode
     labels:
@@ -37,7 +37,7 @@ services:
       - sabnzbd
     volumes:
       - radarr:/config
-      - ${MEDIA_MNT}:/data
+      - media:/data
     labels:
       - flame.type=app
       - flame.name=Radarr
@@ -57,7 +57,7 @@ services:
       - sabnzbd
     volumes:
       - sonarr:/config
-      - ${MEDIA_MNT}:/data
+      - media:/data
     labels:
       - flame.type=app
       - flame.name=Sonarr
@@ -75,7 +75,7 @@ services:
       - TZ
     volumes:
       - sabnzbd:/config
-      - ${MEDIA_MNT}:/data
+      - media:/data
     labels:
       - flame.type=app
       - flame.name=Sabnzbd
@@ -89,6 +89,11 @@ volumes:
     driver_opts:
       config: ./rclone.conf
       remote: minio:appdata/plex
+  media:
+    driver: rclone
+    driver_opts:
+      config: ./rclone.conf
+      remote: minio:media/
   radarr:
     driver: rclone
     driver_opts:
