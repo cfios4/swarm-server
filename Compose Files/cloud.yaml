@@ -1,14 +1,16 @@
 ---
 version: "3.8"
-  
+
 services:
-  
+
   pairdrop:
     image: linuxserver/pairdrop:latest
     deploy:
       replicas: 1
     networks:
-      - ${OVERLAY_NETWORK}
+      - overlaynet
+    environment:
+      - TZ
     tmpfs:
       - /config
     labels:
@@ -16,62 +18,72 @@ services:
       - flame.name=Pairdrop
       - flame.icon=share-variant
       - flame.url=https://drop.${DOMAIN}/
-  
+
   nextcloud:
     image: nextcloud:latest
     deploy:
       replicas: 1
     networks:
-      - ${OVERLAY_NETWORK}
+      - overlaynet
     environment:
-      NEXTCLOUD_TRUSTED_DOMAIN=cloud.${DOMAIN}
-      SQLITE_DATABASE=nextcloud
-   #    MYSQL_PASSWORD=nextcloud
-   #    MYSQL_DATABASE=nextcloud
-   #    MYSQL_USER=nextcloud
-   #    MYSQL_${HOST_NETWORK}=mysql
+      - TZ
+      - NEXTCLOUD_TRUSTED_DOMAINS
+      - NEXTCLOUD_TRUSTED_DOMAIN
+      - NEXTCLOUD_ADMIN_USER
+      - NEXTCLOUD_ADMIN_PASSWORD
+      - SQLITE_DATABASE
+      - OBJECTSTORE_S3_HOST
+      - OBJECTSTORE_S3_BUCKET
+      - OBJECTSTORE_S3_KEY
+      - OBJECTSTORE_S3_SECRET
+      - OBJECTSTORE_S3_PORT
+      - OBJECTSTORE_S3_SSL
+      - OBJECTSTORE_S3_USEPATH_STYLE
     volumes:
-      - ${APP_MNT}/nextcloud:/var/www/html
+      - nextcloud:/var/www/html
     labels:
       - flame.type=app
       - flame.name=Cloud
       - flame.icon=cloud
       - flame.url=https://cloud.${DOMAIN}/
-  
+
   onlyoffice:
     image: onlyoffice/documentserver:latest
     deploy:
       replicas: 1
     networks:
-      - ${OVERLAY_NETWORK}
+      - overlaynet
+    environment:
+      - TZ
     tmpfs:
       - /var/log/onlyoffice
 
   microbin:
     image: danielszabo99/microbin:latest
     networks:
-      - ${OVERLAY_NETWORK}
+      - overlaynet
     environment:
-      MICROBIN_ADMIN_USERNAME: admin
-      MICROBIN_ADMIN_PASSWORD: changeme
-      MICROBIN_EDITABLE: 'true'
-      MICROBIN_HIGHLIGHTSYNTAX: 'true'
-      MICROBIN_PORT: 80
-      MICROBIN_BIND: 0.0.0.0
-      MICROBIN_PRIVATE: 'true'
-      MICROBIN_PUBLIC_PATH: https://bin.${DOMAIN}/
-      MICROBIN_SHOW_READ_STATS: 'true'
-      MICROBIN_TITLE: cafio
-      MICROBIN_ENABLE_BURN_AFTER: 'true'
-      MICROBIN_WIDE: 'true'
-      MICROBIN_QR: 'true'
-      MICROBIN_EXTERNAL_PASTA: 'true'
-      MICROBIN_ENABLE_READONLY: 'true'
-      MICROBIN_ENCRYPTION_CLIENT_SIDE: 'true'
-      MICROBIN_ENCRYPTION_SERVER_SIDE: 'true'
-      MICROBIN_DISABLE_TELEMETRY: 'true'
-    volumes:
-      - ${APP_MNT}/microbin:/app/microbin_data
+      - TZ
+      - MICROBIN_ADMIN_USERNAME
+      - MICROBIN_ADMIN_PASSWORD
+      - MICROBIN_EDITABLE
+      - MICROBIN_HIGHLIGHTSYNTAX
+      - MICROBIN_PORT
+      - MICROBIN_BIND
+      - MICROBIN_PRIVATE
+      - MICROBIN_PUBLIC_PATH
+      - MICROBIN_SHOW_READ_STATS
+      - MICROBIN_TITLE
+      - MICROBIN_ENABLE_BURN_AFTER
+      - MICROBIN_WIDE
+      - MICROBIN_QR
+      - MICROBIN_EXTERNAL_PASTA
+      - MICROBIN_ENABLE_READONLY
+      - MICROBIN_ENCRYPTION_CLIENT_SIDE
+      - MICROBIN_ENCRYPTION_SERVER_SIDE
+      - MICROBIN_DISABLE_TELEMETRY
+    tmpfs:
+      - /app/microbin_data
     labels:
       - flame.type=app
       - flame.name=Microbin
@@ -83,9 +95,11 @@ services:
     deploy:
       replicas: 1
     networks:
-      - ${OVERLAY_NETWORK}
+      - overlaynet
+    environment:
+      - TZ
     volumes:
-      - ${APP_MNT}/vscode:/config
+      - vscode:/config
     labels:
       - flame.type=app
       - flame.name=VSCode
@@ -97,19 +111,20 @@ services:
     deploy:
       replicas: 1
     networks:
-      - ${OVERLAY_NETWORK}
+      - overlaynet
     environment:
-      DOMAIN: https://vault.${DOMAIN}/
-      SENDS_ALLOWED: 'true'
-      EMERGENCY_ACCESS_ALLOWED: 'true'
-      WEB_VAULT_ENABLED: 'true'
-      SIGNUPS_ALLOWED: 'false'
-      SIGNUPS_VERIFY: 'false'
-      SIGNUPS_DOMAINS_WHITELIST: ${DOMAIN}
-      YUBICO_CLIENT_ID: 92307
-      YUBICO_SECRET_KEY: 72o9iOvaz1yUO+6MomnE7EkPNgw=
+      - TZ
+      - DOMAIN=https://vault.${DOMAIN}/
+      - SENDS_ALLOWED='true'
+      - EMERGENCY_ACCESS_ALLOWED='true'
+      - WEB_VAULT_ENABLED='true'
+      - SIGNUPS_ALLOWED='false'
+      - SIGNUPS_VERIFY='false'
+      - SIGNUPS_DOMAINS_WHITELIST=${DOMAIN}
+      - YUBICO_CLIENT_ID=92307
+      - YUBICO_SECRET_KEY=72o9iOvaz1yUO+6MomnE7EkPNgw=
     volumes:
-      - ${APP_MNT}/vaultwarden:/data
+      - vaultwarden:/data
     labels:
       - flame.type=app
       - flame.name=Microbin
@@ -123,16 +138,17 @@ services:
     networks:
       - ${OVERLAYNET}
     environment:
-      PROTOCOL: https
-      DOMAIN: ${DOMAIN}
-      HTTP_PORT: 3000
-      APP_NAME: Gitea
-      SHOW_USER_EMAIL: false
-      REVERSE_PROXY_TRUSTED_PROXIES: 127.0.0.0/8,::1/128, 192.168.45.0/24, cafio.co
-      EMAIL_DOMAIN_ALLOWLIST: ${DOMAIN}
+      - TZ
+      - PROTOCOL=https
+      - DOMAIN=${DOMAIN}
+      - HTTP_PORT=3000
+      - APP_NAME=Gitea
+      - SHOW_USER_EMAIL=false
+      - REVERSE_PROXY_TRUSTED_PROXIES=127.0.0.0/8,::1/128, 192.168.45.0/24, cafio.co
+      - EMAIL_DOMAIN_ALLOWLIST=${DOMAIN}
     volumes:
-      - ${APP_MNT}/gitea/config:/etc/gitea
-      - ${APP_MNT}/gitea/data:/var/lib/gitea
+      - gitea/config:/etc/gitea
+      - gitea/data:/var/lib/gitea
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     lables:
@@ -141,6 +157,28 @@ services:
       - flame.icon=git
       - flame.url=https://git.${DOMAIN}/
 
+volumes:
+  nextcloud:
+    driver: rclone
+    driver_opts:
+      config: ./rclone.conf
+      remote: minio:appdata/nextcloud
+   vscode:
+    driver: rclone
+    driver_opts:
+      config: ./rclone.conf
+      remote: minio:appdata/ vscode
+  vaultwarden:
+    driver: rclone
+    driver_opts:
+      config: ./rclone.conf
+      remote: minio:appdata/vaultwarden
+  gitea:
+    driver: rclone
+    driver_opts:
+      config: ./rclone.conf
+      remote: minio:appdata/gitea
+
 networks:
-  ${OVERLAY_NETWORK}:
+  overlaynet:
     external: true
