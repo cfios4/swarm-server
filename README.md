@@ -1,5 +1,5 @@
 # swarm-server
-This repo is supposed to use the `swarm-setup.sh` to create a Swarm cluster with a Glustered storage to synchronize application data across nodes and to pool remaining storage together for media library.
+This repo is supposed to use the `swarm-setup.sh` to create a Swarm cluster with ~~a Glustered~~ S3 to synchronize application data across nodes and to pool remaining storage together for media library.
 
 ## Stacks
 
