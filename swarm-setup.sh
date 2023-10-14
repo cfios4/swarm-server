@@ -27,15 +27,15 @@ $node3       node3
 EOF
 
 ## Initialize Docker Swarm
-docker swarm init --advertise-addr tailscale0
-# Get manager and worker join token
-manager_token=$(docker swarm join-token manager -q)
-worker_token=$(docker swarm join-token worker -q)
+# docker swarm init --advertise-addr tailscale0
+# # Get manager and worker join token
+# manager_token=$(docker swarm join-token manager -q)
+# worker_token=$(docker swarm join-token worker -q)
 
-## Initialize GlusterFS
-apk add glusterfs glusterfs-server
-rc-update add glusterd
-service glusterd start
+# ## Initialize GlusterFS
+# apk add glusterfs glusterfs-server
+# rc-update add glusterd
+# service glusterd start
 
 
 ### Node 1
@@ -58,11 +58,11 @@ EOF
 docker swarm join --token $manager_token $tailscaleip:2377
 
 ## Initialize GlusterFS on Node 2
-apk add glusterfs glusterfs-server
-rc-update add glusterd
-service glusterd start
-## Join the GlusterFS cluster on Node 2
-gluster peer probe node0
+# apk add glusterfs glusterfs-server
+# rc-update add glusterd
+# service glusterd start
+# ## Join the GlusterFS cluster on Node 2
+# gluster peer probe node0
 EOF
 
 ### Node 2
@@ -85,11 +85,11 @@ EOF
 docker swarm join --token $manager_token $tailscaleip:2377
 
 ## Initialize GlusterFS on Node 3
-apk add glusterfs glusterfs-server
-rc-update add glusterd
-service glusterd start
-## Join the GlusterFS cluster on Node 3
-gluster peer probe node0
+# apk add glusterfs glusterfs-server
+# rc-update add glusterd
+# service glusterd start
+# ## Join the GlusterFS cluster on Node 3
+# gluster peer probe node0
 EOF
 
 ### Node 3
@@ -111,22 +111,22 @@ EOF
 docker swarm join --token $worker_token $tailscaleip:2377
 
 ## Initialize GlusterFS on Node 3
-apk add glusterfs glusterfs-server
-rc-update add glusterd
-service glusterd start
-## Join the GlusterFS cluster on Node 3
-gluster peer probe node0
+# apk add glusterfs glusterfs-server
+# rc-update add glusterd
+# service glusterd start
+# ## Join the GlusterFS cluster on Node 3
+# gluster peer probe node0
 EOF
 
 ### Back to Node 0
-## Probe nodes back
-gluster peer probe node{1..3}
-# Create GlusterFS volumes for appdata and media
-gluster volume create appdata replica 4 node{0..3}:/mnt/cluster/appdata 
-gluster volume create media distributed node{0..3}:/mnt/cluster/media
-# Start GlusterFS volumes
-gluster volume start appdata
-gluster volume start media
+# ## Probe nodes back
+# gluster peer probe node{1..3}
+# # Create GlusterFS volumes for appdata and media
+# gluster volume create appdata replica 4 node{0..3}:/mnt/cluster/appdata 
+# gluster volume create media distributed node{0..3}:/mnt/cluster/media
+# # Start GlusterFS volumes
+# gluster volume start appdata
+# gluster volume start media
 
 
 ### End of script
