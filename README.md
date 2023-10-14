@@ -4,8 +4,8 @@ This repo is supposed to use the `swarm-setup.sh` to create a Swarm cluster with
 ## Stacks
 
 There are 3 seperate stacks of services:
-1. `Misc / 1st Stack / initial`
-    - This stack deploys the web server / reverse proxy (with configuration file) and the dashboard.
+1. `Initial`
+    - This stack deploys the web server / reverse proxy (with configuration file), dashboard, DNS, and S3.
 2. `Cloud`
     - This stack deploys, what would be considered, "cloud services". 
 3. `Media`
