@@ -39,8 +39,9 @@ services:
       - OBJECTSTORE_S3_PORT
       - OBJECTSTORE_S3_SSL
       - OBJECTSTORE_S3_USEPATH_STYLE
+      - OBJECTSTORE_S3_AUTOCREATE
     volumes:
-      - nextcloud:/var/www/html
+      - ${APPDATA_MNT}/nextcloud:/var/www/html
     labels:
       - flame.type=app
       - flame.name=Cloud
@@ -99,7 +100,7 @@ services:
     environment:
       - TZ
     volumes:
-      - vscode:/config
+      - ${APPDATA_MNT}/vscode:/config
     labels:
       - flame.type=app
       - flame.name=VSCode
@@ -124,7 +125,7 @@ services:
       - YUBICO_CLIENT_ID=92307
       - YUBICO_SECRET_KEY=72o9iOvaz1yUO+6MomnE7EkPNgw=
     volumes:
-      - vaultwarden:/data
+      - ${APPDATA_MNT}/vaultwarden:/data
     labels:
       - flame.type=app
       - flame.name=Microbin
@@ -136,19 +137,19 @@ services:
     deploy:
       replicas: 1
     networks:
-      - ${OVERLAYNET}
+      - overlaynet
     environment:
       - TZ
-      - PROTOCOL=https
-      - DOMAIN=${DOMAIN}
-      - HTTP_PORT=3000
-      - APP_NAME=Gitea
-      - SHOW_USER_EMAIL=false
-      - REVERSE_PROXY_TRUSTED_PROXIES=127.0.0.0/8,::1/128, 192.168.45.0/24, cafio.co
-      - EMAIL_DOMAIN_ALLOWLIST=${DOMAIN}
+      - PROTOCOL
+      - DOMAIN
+      - HTTP_PORT
+      - APP_NAME
+      - SHOW_USER_EMAIL
+      - REVERSE_PROXY_TRUSTED_PROXIES
+      - EMAIL_DOMAIN_ALLOWLIST
     volumes:
-      - gitea/config:/etc/gitea
-      - gitea/data:/var/lib/gitea
+      - ${APPDATA_MNT}/gitea/config:/etc/gitea
+      - ${APPDATA_MNT}/gitea/data:/var/lib/gitea
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     lables:
@@ -156,28 +157,6 @@ services:
       - flame.name=Microbin
       - flame.icon=git
       - flame.url=https://git.${DOMAIN}/
-
-volumes:
-  nextcloud:
-    driver: rclone
-    driver_opts:
-      config: ./rclone.conf
-      remote: minio:appdata/nextcloud
-   vscode:
-    driver: rclone
-    driver_opts:
-      config: ./rclone.conf
-      remote: minio:appdata/ vscode
-  vaultwarden:
-    driver: rclone
-    driver_opts:
-      config: ./rclone.conf
-      remote: minio:appdata/vaultwarden
-  gitea:
-    driver: rclone
-    driver_opts:
-      config: ./rclone.conf
-      remote: minio:appdata/gitea
 
 networks:
   overlaynet:
