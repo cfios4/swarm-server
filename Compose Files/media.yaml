@@ -15,8 +15,8 @@ services:
       - ADVERTISE_IP
       - ALLOWED_NETWORKS
     volumes:
-      - plex:/config
-      - media:/media:ro
+      - ${APPDATA_MNT}/gitea/plex:/config
+      - ${MEDIA_MNT}:/media:ro
     tmpfs:
       - /transcode
     labels:
@@ -36,8 +36,8 @@ services:
     depends_on:
       - sabnzbd
     volumes:
-      - radarr:/config
-      - media:/data
+      - ${APPDATA_MNT}/gitea/radarr:/config
+      - ${MEDIA_MNT}:/data
     labels:
       - flame.type=app
       - flame.name=Radarr
@@ -56,8 +56,8 @@ services:
     depends_on:
       - sabnzbd
     volumes:
-      - sonarr:/config
-      - media:/data
+      - ${APPDATA_MNT}/gitea/sonarr:/config
+      - ${MEDIA_MNT}:/data
     labels:
       - flame.type=app
       - flame.name=Sonarr
@@ -74,41 +74,14 @@ services:
     environment:
       - TZ
     volumes:
-      - sabnzbd:/config
-      - media:/data
+      - ${APPDATA_MNT}/gitea/sabnzbd:/config
+      - ${MEDIA_MNT}:/data
     labels:
       - flame.type=app
       - flame.name=Sabnzbd
       - flame.icon=cloud-download
       - flame.url=https://watch.${DOMAIN}/sabnzbd/
       - flame.visibility=hidden
-
-volumes:
-  plex:
-    driver: rclone
-    driver_opts:
-      config: ./rclone.conf
-      remote: minio:appdata/plex
-  media:
-    driver: rclone
-    driver_opts:
-      config: ./rclone.conf
-      remote: minio:media/
-  radarr:
-    driver: rclone
-    driver_opts:
-      config: ./rclone.conf
-      remote: minio:appdata/radarr
-  sonarr:
-    driver: rclone
-    driver_opts:
-      config: ./rclone.conf
-      remote: minio:appdata/sonarr
-  sabnzbd:
-    driver: rclone
-    driver_opts:
-      config: ./rclone.conf
-      remote: minio:appdata/sabnzbd
 
 networks:
   overlaynet:
