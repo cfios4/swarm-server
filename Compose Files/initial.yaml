@@ -55,7 +55,7 @@ services:
   minio:
     image: minio/minio:latest
     deploy:
-      replicas: 1
+      mode: global
     networks:
       - overlaynet
     environment:
