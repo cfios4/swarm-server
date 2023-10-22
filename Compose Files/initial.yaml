@@ -3,27 +3,55 @@ version: "3.8"
 
 services:
 
-  caddy:
-    image: caddy:latest
+  traefik:
+    image: traefik:latest
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+    ports:
+      - "80:80"
+      - "443:443"
     networks:
       - overlaynet
-    ports:
-      - ${HTTP_PORT:-80}:80
-      - ${HTTPS_PORT:-443}:443
+    command:
+      - --api.insecure=true
+      - --api.dashboard=true
+      - --serversTransport.insecureSkipVerify=true
+      - --api.debug=true
+      - --providers.docker=true
+      - --providers.docker.watch=true
+      - --providers.docker.swarmMode=true
+      - --providers.docker.network=overlaynet
+      - --providers.docker.exposedByDefault=false
+      # - --providers.docker.defaultRule=Host(`{{ normalize .Name }}.cafio.co`)
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecured.address=:443
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      - --certificatesresolvers.cf.acme.dnschallenge=true
+      - --certificatesresolvers.cf.acme.dnschallenge.provider=cloudflare
+      - --certificatesresolvers.cf.acme.email=cfios@mailfence.com
+      - --certificatesresolvers.cf.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.cf.acme.httpChallenge.entryPoint=web
     environment:
-      - TZ
-      - CADDYFILE
-    command: sh -c 'printenv CADDYFILE > /config/Caddyfile && caddy run --config /config/Caddyfile --adapter caddyfile'
+      - CF_DNS_API_TOKEN=
     volumes:
-      - ${APPDATA_MNT}/caddy:/data
-      - ${APPDATA_MNT}/caddy:/config
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${APPDATA_MNT}/traefik:/letsencrypt
 
   flame:
     image: pawelmalak/flame:latest
     deploy:
       replicas: 1
+      labels:
+        traefik.enable: true
+        traefik.http.routers.flame.rule: Host(`${DOMAIN}`)
+        traefik.http.routers.flame.entrypoints: websecure
+        traefik.http.routers.flame.service: flame
+        traefik.http.services.flame.loadbalancer.server.port: 5005
+        traefik.http.routers.flame.tls.certresolver: cf
     networks:
       - overlaynet
     environment:
@@ -37,8 +65,16 @@ services:
     image: adguard/adguardhome:latest
     deploy:
       replicas: 1
+      labels:
+        traefik.enable: true
+        traefik.http.routers.flame.rule: Host(`${DOMAIN}`)
+        traefik.http.routers.flame.entrypoints: websecure
+        traefik.http.routers.flame.service: flame
+        traefik.http.services.flame.loadbalancer.server.port: 5005
+        traefik.http.routers.flame.tls.certresolver: cf
       placement:
-        constraints: [node.hostname == swarm0]
+        constraints: 
+          - node.hostname == swarm0
     networks:
       - macvlan4home
     environment:
