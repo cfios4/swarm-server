@@ -7,6 +7,13 @@ services:
     image: plexinc/pms-docker:latest
     deploy:
       replicas: 1
+      labels:
+        traefik.enable: true
+        traefik.http.routers.plex.rule: Host(`watch.${DOMAIN}`)
+        traefik.http.routers.plex.service: plex
+        traefik.http.routers.plex.entrypoints: websecure
+        traefik.http.services.plex.loadbalancer.server.port: 32400
+        traefik.http.routers.plex.tls.certresolver: cf
     networks:
       - overlaynet
     environment:
@@ -15,7 +22,7 @@ services:
       - ADVERTISE_IP
       - ALLOWED_NETWORKS
     volumes:
-      - ${APPDATA_MNT}/gitea/plex:/config
+      - ${APPDATA_MNT}/plex:/config
       - ${MEDIA_MNT}:/media:ro
     tmpfs:
       - /transcode
@@ -43,7 +50,7 @@ services:
     depends_on:
       - sabnzbd
     volumes:
-      - ${APPDATA_MNT}/gitea/radarr:/config
+      - ${APPDATA_MNT}/radarr:/config
       - ${MEDIA_MNT}:/data
     labels:
       - flame.type=app
@@ -70,7 +77,7 @@ services:
     depends_on:
       - sabnzbd
     volumes:
-      - ${APPDATA_MNT}/gitea/sonarr:/config
+      - ${APPDATA_MNT}/sonarr:/config
       - ${MEDIA_MNT}:/data
     labels:
       - flame.type=app
@@ -95,7 +102,7 @@ services:
     environment:
       - TZ
     volumes:
-      - ${APPDATA_MNT}/gitea/sabnzbd:/config
+      - ${APPDATA_MNT}/sabnzbd:/config
       - ${MEDIA_MNT}:/data
     labels:
       - flame.type=app
