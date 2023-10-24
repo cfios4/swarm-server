@@ -73,7 +73,7 @@ services:
         traefik.http.routers.adguard.rule: Host(`adguard.lan`)
         traefik.http.routers.adguard.service: adguard
         traefik.http.routers.adguard.entrypoints: internal
-        traefik.http.services.adguard.loadbalancer.server.port: 443
+        traefik.http.services.adguard.loadbalancer.server.port: 80
         traefik.http.routers.adguard.tls.certresolver: cf
       placement:
         constraints: 
