@@ -64,7 +64,7 @@ services:
       replicas: 1
       labels:
         traefik.enable: "true"
-        traefik.http.routers.sonarr.rule: Host(`watch.${DOMAIN}`) && PathPrefix ('/sonarr')
+        traefik.http.routers.sonarr.rule: (Host(`watch.${DOMAIN}`) && PathPrefix ('/sonarr'))
         traefik.http.routers.sonarr.service: sonarr
         traefik.http.routers.sonarr.entrypoints: websecure
         traefik.http.services.sonarr.loadbalancer.server.port: 8989
