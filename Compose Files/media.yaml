@@ -22,8 +22,9 @@ services:
       ADVERTISE_IP: https://${HOSTNAME}.lan:32400,https://${TAILSCALEIP}:32400,https://watch.${DOMAIN}:443
       ALLOWED_NETWORKS: ${SUBNET},100.64.0.0/255.192.0.0,10.0.0.0/255.0.0.0
     volumes:
-      - ${APPDATA_MNT}/plex:/config
-      - ${MEDIA_MNT}:/media:ro
+      - /mnt/cluster/appdata/plex:/config
+    volumes_from:
+      - sabnzbd:ro
     tmpfs:
       - /transcode
     labels:
@@ -50,8 +51,9 @@ services:
     depends_on:
       - sabnzbd
     volumes:
-      - ${APPDATA_MNT}/radarr:/config
-      - ${MEDIA_MNT}:/data
+      - /mnt/cluster/appdata/radarr:/config
+    volumes_from:
+      - sabnzbd
     labels:
       - flame.type=app
       - flame.name=Radarr
@@ -77,8 +79,9 @@ services:
     depends_on:
       - sabnzbd
     volumes:
-      - ${APPDATA_MNT}/sonarr:/config
-      - ${MEDIA_MNT}:/data
+      - /mnt/cluster/appdata/sonarr:/config
+    volumes_from:
+      - sabnzbd
     labels:
       - flame.type=app
       - flame.name=Sonarr
@@ -102,7 +105,7 @@ services:
     environment:
       TZ: ${TZ}
     volumes:
-      - ${APPDATA_MNT}/sabnzbd:/config
+      - /mnt/cluster/appdata/sabnzbd:/config
       - ${MEDIA_MNT}:/data
     labels:
       - flame.type=app

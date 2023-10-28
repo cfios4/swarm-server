@@ -41,7 +41,7 @@ services:
       TZ: ${TZ}
       CF_DNS_API_TOKEN: bD9fV0AK5MUEwj8nFLSnwh0zmhIODxt6-955dIRK
     volumes:
-      - ${APPDATA_MNT}/traefik:/letsencrypt
+      - /mnt/cluster/appdata/traefik:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   flame:
@@ -61,7 +61,7 @@ services:
       TZ: ${TZ}
       PASSWORD: changeme
     volumes:
-      - ${APPDATA_MNT}/flame:/app/data
+      - /mnt/cluster/appdata/flame:/app/data
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   adguard:
@@ -83,7 +83,7 @@ services:
     environment:
       TZ: ${TZ}
     volumes:
-      - ${APPDATA_MNT}/adguard:/opt/adguardhome
+      - /mnt/cluster/appdata/adguard:/opt/adguardhome
     labels:
       - flame.type=app
       - flame.name=AdGuard Home
@@ -110,7 +110,7 @@ services:
       MINIO_ROOT_PASSWORD: changeme
     command: 'server /data'
     volumes:
-      - ${APPDATA_MNT}/minio:/data
+      - /mnt/cluster/appdata/minio:/data
   
   minio-client:
     image: minio/mc

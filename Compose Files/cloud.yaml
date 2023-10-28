@@ -54,7 +54,7 @@ services:
       OBJECTSTORE_S3_USEPATH_STYLE: 'true'
       OBJECTSTORE_S3_AUTOCREATE: 'true'
     volumes:
-      - ${APPDATA_MNT}/nextcloud:/var/www/html
+      - /mnt/cluster/appdata/nextcloud:/var/www/html
     labels:
       - flame.type=app
       - flame.name=Cloud
@@ -136,7 +136,7 @@ services:
     environment:
       TZ: ${TZ}
     volumes:
-      - ${APPDATA_MNT}/vscode:/config
+      - /mnt/cluster/appdata/vscode:/config
     labels:
       - flame.type=app
       - flame.name=VSCode
@@ -168,7 +168,7 @@ services:
       YUBICO_CLIENT_ID: '92307'
       YUBICO_SECRET_KEY: 72o9iOvaz1yUO+6MomnE7EkPNgw=
     volumes:
-      - ${APPDATA_MNT}/vaultwarden:/data
+      - /mnt/cluster/appdata/vaultwarden:/data
     labels:
       - flame.type=app
       - flame.name=Microbin
@@ -198,8 +198,8 @@ services:
       REVERSE_PROXY_TRUSTED_PROXIES: 127.0.0.0/8,::1/128, 192.168.45.0/24, cafio.co
       EMAIL_DOMAIN_ALLOWLIST: ${DOMAIN}
     volumes:
-      - ${APPDATA_MNT}/gitea/config:/etc/gitea
-      - ${APPDATA_MNT}/gitea/data:/var/lib/gitea
+      - /mnt/cluster/appdata/gitea/config:/etc/gitea
+      - /mnt/cluster/appdata/gitea/data:/var/lib/gitea
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     lables:
