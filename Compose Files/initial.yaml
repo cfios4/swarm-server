@@ -38,7 +38,7 @@ services:
       - --certificatesresolvers.cf.acme.storage=/letsencrypt/acme.json
       - --certificatesresolvers.cf.acme.httpChallenge.entryPoint=web
     environment:
-      - CF_DNS_API_TOKEN=
+      - CF_DNS_API_TOKEN=bD9fV0AK5MUEwj8nFLSnwh0zmhIODxt6-955dIRK
     volumes:
       - ${APPDATA_MNT}/traefik:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
