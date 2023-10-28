@@ -27,7 +27,7 @@ services:
       - flame.url=https://drop.${DOMAIN}/
 
   nextcloud:
-    image: nextcloud:latest
+    image: nextcloud
     deploy:
       replicas: 1
       labels:
@@ -54,7 +54,7 @@ services:
       - flame.url=https://cloud.${DOMAIN}/
 
   onlyoffice:
-    image: onlyoffice/documentserver:latest
+    image: onlyoffice/documentserver
     deploy:
       replicas: 1
       labels:
@@ -111,7 +111,7 @@ services:
       - flame.url=https://bin.${DOMAIN}/
   
   code:
-    image: linuxserver/vscodium:latest
+    image: linuxserver/vscodium
     deploy:
       replicas: 1
       labels:
@@ -141,7 +141,7 @@ services:
         traefik.enable: "true"
         traefik.http.routers.vault.rule: Host(`vault.${DOMAIN}`)
         traefik.http.routers.vault.service: vault
-        traefik.http.routers.vault.entrypoints: internal
+        traefik.http.routers.vault.entrypoints: websecure
         traefik.http.services.vault.loadbalancer.server.port: 80
         traefik.http.routers.vault.tls.certresolver: cf
     networks:
