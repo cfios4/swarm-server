@@ -5,7 +5,6 @@ services:
 
   plex:
     image: plexinc/pms-docker:latest
-    container_name: plex
     deploy:
       replicas: 1
       labels:
@@ -19,7 +18,7 @@ services:
       - overlaynet
     environment:
       TZ: ${TZ}
-      PLEX_CLAIM: claim-SXc1pUGJgWPDzRadJdNC
+      PLEX_CLAIM:  #https://plex.tv/claim
       ADVERTISE_IP: https://${HOSTNAME}.lan:32400,https://${TAILSCALEIP}:32400,https://watch.${DOMAIN}:443
       ALLOWED_NETWORKS: ${SUBNET},100.64.0.0/255.192.0.0,10.0.0.0/255.0.0.0
     volumes:
@@ -43,7 +42,6 @@ services:
         traefik.http.routers.radarr.service: radarr
         traefik.http.routers.radarr.entrypoints: websecure
         traefik.http.services.radarr.loadbalancer.server.port: 7878
-        traefik.http.routers.radarr.tls.certresolver: cf
     networks:
       - overlaynet
     environment:
@@ -70,7 +68,6 @@ services:
         traefik.http.routers.sonarr.service: sonarr
         traefik.http.routers.sonarr.entrypoints: websecure
         traefik.http.services.sonarr.loadbalancer.server.port: 8989
-        traefik.http.routers.sonarr.tls.certresolver: cf
     networks:
       - overlaynet
     environment:
@@ -97,7 +94,6 @@ services:
         traefik.http.routers.sabnzbd.service: sabnzbd
         traefik.http.routers.sabnzbd.entrypoints: websecure
         traefik.http.services.sabnzbd.loadbalancer.server.port: 8080
-        traefik.http.routers.sabnzbd.tls.certresolver: cf
     networks:
       - overlaynet
     environment:
