@@ -81,7 +81,7 @@ services:
     networks:
       - macvlan4home
     environment:
-      - TZ: ${TZ}
+      - TZ: "America/New_York"
     volumes:
       - ${APPDATA_MNT}/adguard:/opt/adguardhome
     labels:
