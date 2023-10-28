@@ -94,5 +94,6 @@ services:
 networks:
   overlaynet:
     driver: overlay
+    name: overlaynet
   macvlan4home:
     external: true
