@@ -49,7 +49,7 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: true
+        traefik.enable: "true"
         traefik.http.routers.flame.rule: Host(`${DOMAIN}`)
         traefik.http.routers.flame.service: flame
         traefik.http.routers.flame.entrypoints: websecure
@@ -69,7 +69,7 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: true
+        traefik.enable: "true"
         traefik.http.routers.adguard.rule: Host(`adguard.lan`)
         traefik.http.routers.adguard.service: adguard
         traefik.http.routers.adguard.entrypoints: internal
@@ -96,7 +96,7 @@ services:
     deploy:
       mode: global
       labels:
-        traefik.enable: true
+        traefik.enable: "true"
         traefik.http.routers.minio.rule: Host(`s3.${DOMAIN}`)
         traefik.http.routers.minio.entrypoints: internal
         traefik.http.routers.minio.service: minio
