@@ -104,9 +104,9 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ
-      - MINIO_ROOT_USER
-      - MINIO_ROOT_PASSWORD
+      TZ=${TZ}
+      MINIO_ROOT_USER=admin
+      MINIO_ROOT_PASSWORD=changeme
     command: 'server /data'
     volumes:
       - ${APPDATA_MNT}/minio:/data

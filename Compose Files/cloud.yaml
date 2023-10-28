@@ -40,20 +40,19 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ
-      - NEXTCLOUD_TRUSTED_DOMAINS
-      - NEXTCLOUD_TRUSTED_DOMAIN
-      - NEXTCLOUD_ADMIN_USER
-      - NEXTCLOUD_ADMIN_PASSWORD
-      - SQLITE_DATABASE
-      - OBJECTSTORE_S3_HOST
-      - OBJECTSTORE_S3_BUCKET
-      - OBJECTSTORE_S3_KEY
-      - OBJECTSTORE_S3_SECRET
-      - OBJECTSTORE_S3_PORT
-      - OBJECTSTORE_S3_SSL
-      - OBJECTSTORE_S3_USEPATH_STYLE
-      - OBJECTSTORE_S3_AUTOCREATE
+      TZ=${TZ}
+      NEXTCLOUD_TRUSTED_DOMAINS=cloud.${DOMAIN}
+      NEXTCLOUD_ADMIN_USER=casey
+      NEXTCLOUD_ADMIN_PASSWORD=changeme
+      SQLITE_DATABASE=nextcloud
+      OBJECTSTORE_S3_HOST=minio
+      OBJECTSTORE_S3_BUCKET=nextcloud
+      OBJECTSTORE_S3_KEY=admin
+      OBJECTSTORE_S3_SECRET=changeme
+      OBJECTSTORE_S3_PORT=9000
+      OBJECTSTORE_S3_SSL=false
+      OBJECTSTORE_S3_USEPATH_STYLE=true
+      OBJECTSTORE_S3_AUTOCREATE=true
     volumes:
       - ${APPDATA_MNT}/nextcloud:/var/www/html
     labels:
@@ -94,25 +93,25 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ
-      - MICROBIN_ADMIN_USERNAME
-      - MICROBIN_ADMIN_PASSWORD
-      - MICROBIN_EDITABLE
-      - MICROBIN_HIGHLIGHTSYNTAX
-      - MICROBIN_PORT
-      - MICROBIN_BIND
-      - MICROBIN_PRIVATE
-      - MICROBIN_PUBLIC_PATH
-      - MICROBIN_SHOW_READ_STATS
-      - MICROBIN_TITLE
-      - MICROBIN_ENABLE_BURN_AFTER
-      - MICROBIN_WIDE
-      - MICROBIN_QR
-      - MICROBIN_EXTERNAL_PASTA
-      - MICROBIN_ENABLE_READONLY
-      - MICROBIN_ENCRYPTION_CLIENT_SIDE
-      - MICROBIN_ENCRYPTION_SERVER_SIDE
-      - MICROBIN_DISABLE_TELEMETRY
+      TZ=${TZ}
+      MICROBIN_ADMIN_USERNAME=admin
+      MICROBIN_ADMIN_PASSWORD=changeme
+      MICROBIN_EDITABLE='true'
+      MICROBIN_HIGHLIGHTSYNTAX='true'
+      MICROBIN_PORT=80
+      MICROBIN_BIND=0.0.0.0
+      MICROBIN_PRIVATE='true'
+      MICROBIN_PUBLIC_PATH=https://bin.${DOMAIN}/
+      MICROBIN_SHOW_READ_STATS='true'
+      MICROBIN_TITLE=cafio
+      MICROBIN_ENABLE_BURN_AFTER='true'
+      MICROBIN_WIDE='true'
+      MICROBIN_QR='true'
+      MICROBIN_EXTERNAL_PASTA='true'
+      MICROBIN_ENABLE_READONLY='true'
+      MICROBIN_ENCRYPTION_CLIENT_SIDE='true'
+      MICROBIN_ENCRYPTION_SERVER_SIDE='true'
+      MICROBIN_DISABLE_TELEMETRY='true'
     tmpfs:
       - /app/microbin_data
     labels:
@@ -190,14 +189,14 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ
-      - PROTOCOL
-      - DOMAIN
-      - HTTP_PORT
-      - APP_NAME
-      - SHOW_USER_EMAIL
-      - REVERSE_PROXY_TRUSTED_PROXIES
-      - EMAIL_DOMAIN_ALLOWLIST
+      TZ=${TZ}
+      PROTOCOL=https
+      DOMAIN=git.${DOMAIN}
+      HTTP_PORT=3000
+      APP_NAME=Gitea
+      SHOW_USER_EMAIL=false
+      REVERSE_PROXY_TRUSTED_PROXIES=127.0.0.0/8,::1/128, 192.168.45.0/24, cafio.co
+      EMAIL_DOMAIN_ALLOWLIST=${DOMAIN}
     volumes:
       - ${APPDATA_MNT}/gitea/config:/etc/gitea
       - ${APPDATA_MNT}/gitea/data:/var/lib/gitea
