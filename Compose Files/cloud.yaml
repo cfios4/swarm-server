@@ -17,7 +17,7 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ
+      TZ=${TZ}
     tmpfs:
       - /config
     labels:
@@ -75,7 +75,7 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ
+      TZ=${TZ}
     tmpfs:
       - /var/log/onlyoffice
 
@@ -134,7 +134,7 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ
+      TZ=${TZ}
     volumes:
       - ${APPDATA_MNT}/vscode:/config
     labels:
@@ -157,16 +157,16 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ
-      - DOMAIN=https://vault.${DOMAIN}/
-      - SENDS_ALLOWED='true'
-      - EMERGENCY_ACCESS_ALLOWED='true'
-      - WEB_VAULT_ENABLED='true'
-      - SIGNUPS_ALLOWED='false'
-      - SIGNUPS_VERIFY='false'
-      - SIGNUPS_DOMAINS_WHITELIST=${DOMAIN}
-      - YUBICO_CLIENT_ID=92307
-      - YUBICO_SECRET_KEY=72o9iOvaz1yUO+6MomnE7EkPNgw=
+      TZ=${TZ}
+      DOMAIN=https://vault.${DOMAIN}/
+      SENDS_ALLOWED='true'
+      EMERGENCY_ACCESS_ALLOWED='true'
+      WEB_VAULT_ENABLED='true'
+      SIGNUPS_ALLOWED='false'
+      SIGNUPS_VERIFY='false'
+      SIGNUPS_DOMAINS_WHITELIST=${DOMAIN}
+      YUBICO_CLIENT_ID=92307
+      YUBICO_SECRET_KEY=72o9iOvaz1yUO+6MomnE7EkPNgw=
     volumes:
       - ${APPDATA_MNT}/vaultwarden:/data
     labels:

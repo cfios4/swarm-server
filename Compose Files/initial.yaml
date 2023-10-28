@@ -38,7 +38,8 @@ services:
       - --certificatesresolvers.cf.acme.storage=/letsencrypt/acme.json
       - --certificatesresolvers.cf.acme.httpChallenge.entryPoint=web
     environment:
-      - CF_DNS_API_TOKEN=bD9fV0AK5MUEwj8nFLSnwh0zmhIODxt6-955dIRK
+      TZ=${TZ}
+      CF_DNS_API_TOKEN=bD9fV0AK5MUEwj8nFLSnwh0zmhIODxt6-955dIRK
     volumes:
       - ${APPDATA_MNT}/traefik:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -57,7 +58,7 @@ services:
     networks:
       - overlaynet
     environment:
-      TZ
+      TZ=${TZ}
       PASSWORD=changeme
     volumes:
       - ${APPDATA_MNT}/flame:/app/data
@@ -80,7 +81,7 @@ services:
     networks:
       - macvlan4home
     environment:
-      - TZ
+      TZ=${TZ}
     volumes:
       - ${APPDATA_MNT}/adguard:/opt/adguardhome
     labels:

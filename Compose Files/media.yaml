@@ -46,7 +46,7 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ
+      TZ=${TZ}
     depends_on:
       - sabnzbd
     volumes:
@@ -73,7 +73,7 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ
+      TZ=${TZ}
     depends_on:
       - sabnzbd
     volumes:
@@ -100,7 +100,7 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ
+      TZ=${TZ}
     volumes:
       - ${APPDATA_MNT}/sabnzbd:/config
       - ${MEDIA_MNT}:/data
