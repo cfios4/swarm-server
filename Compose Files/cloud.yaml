@@ -186,14 +186,14 @@ services:
       HTTP_PORT: '3000'
       APP_NAME: Gitea
       SHOW_USER_EMAIL: 'false'
-      REVERSE_PROXY_TRUSTED_PROXIES: 127.0.0.0/8,::1/128, 192.168.45.0/24, cafio.co
+      REVERSE_PROXY_TRUSTED_PROXIES: 127.0.0.0/8,::1/128, 192.168.45.0/24, ${DOMAIN}
       EMAIL_DOMAIN_ALLOWLIST: ${DOMAIN}
     volumes:
       - /mnt/cluster/appdata/gitea/config:/etc/gitea
       - /mnt/cluster/appdata/gitea/data:/var/lib/gitea
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-    lables:
+    labels:
       - flame.type=app
       - flame.name=Microbin
       - flame.icon=git
