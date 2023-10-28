@@ -38,7 +38,7 @@ services:
       replicas: 1
       labels:
         traefik.enable: "true"
-        traefik.http.routers.radarr.rule: Host(`watch.${DOMAIN}`) && PathPrefix('/radarr')
+        traefik.http.routers.radarr.rule: Host(`watch.${DOMAIN}`) && PathPrefix(`/radarr`)
         traefik.http.routers.radarr.service: radarr
         traefik.http.routers.radarr.entrypoints: websecure
         traefik.http.services.radarr.loadbalancer.server.port: 7878
@@ -64,7 +64,7 @@ services:
       replicas: 1
       labels:
         traefik.enable: "true"
-        traefik.http.routers.sonarr.rule: Host(`watch.${DOMAIN}`) && PathPrefix('/sonarr')
+        traefik.http.routers.sonarr.rule: Host(`watch.${DOMAIN}`) && PathPrefix(`/sonarr`)
         traefik.http.routers.sonarr.service: sonarr
         traefik.http.routers.sonarr.entrypoints: websecure
         traefik.http.services.sonarr.loadbalancer.server.port: 8989
@@ -90,7 +90,7 @@ services:
       replicas: 1
       labels:
         traefik.enable: "true"
-        traefik.http.routers.sabnzbd.rule: Host(`watch.${DOMAIN}`) && PathPrefix('/sabnzbd')
+        traefik.http.routers.sabnzbd.rule: Host(`watch.${DOMAIN}`) && PathPrefix(`/sabnzbd`)
         traefik.http.routers.sabnzbd.service: sabnzbd
         traefik.http.routers.sabnzbd.entrypoints: websecure
         traefik.http.services.sabnzbd.loadbalancer.server.port: 8080
