@@ -27,7 +27,7 @@ services:
       - flame.url=https://drop.${DOMAIN}/
 
   nextcloud:
-    image: nextcloud
+    image: nextcloud:latest
     deploy:
       replicas: 1
       labels:
@@ -54,7 +54,7 @@ services:
       - flame.url=https://cloud.${DOMAIN}/
 
   onlyoffice:
-    image: onlyoffice/documentserver
+    image: onlyoffice/documentserver:latest
     deploy:
       replicas: 1
       labels:
@@ -111,7 +111,7 @@ services:
       - flame.url=https://bin.${DOMAIN}/
   
   code:
-    image: linuxserver/vscodium
+    image: linuxserver/vscodium:latest
     deploy:
       replicas: 1
       labels:
