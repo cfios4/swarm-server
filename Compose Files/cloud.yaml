@@ -8,7 +8,7 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: true
+        traefik.enable: "true"
         traefik.http.routers.pairdrop.rule: Host(`drop.${DOMAIN}`)
         traefik.http.routers.pairdrop.service: pairdrop
         traefik.http.routers.pairdrop.entrypoints: websecure
@@ -31,7 +31,7 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: true
+        traefik.enable: "true"
         traefik.http.routers.cloud.rule: Host(`cloud.${DOMAIN}`)
         traefik.http.routers.cloud.service: nextcloud
         traefik.http.routers.cloud.entrypoints: websecure
@@ -66,7 +66,7 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: true
+        traefik.enable: "true"
         traefik.http.routers.office.rule: Host(`cloud.${DOMAIN}`) && PathPrefix ('/office')
         traefik.http.routers.office.service: office
         traefik.http.routers.office.entrypoints: websecure
@@ -84,7 +84,7 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: true
+        traefik.enable: "true"
         traefik.http.routers.bin.rule: Host(`bin.${DOMAIN}`)
         traefik.http.routers.bin.service: bin
         traefik.http.routers.bin.entrypoints: websecure
@@ -125,7 +125,7 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: true
+        traefik.enable: "true"
         traefik.http.routers.code.rule: Host(`code.${DOMAIN}`)
         traefik.http.routers.code.service: code
         traefik.http.routers.code.entrypoints: websecure
@@ -148,7 +148,7 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: true
+        traefik.enable: "true"
         traefik.http.routers.vault.rule: Host(`vault.${DOMAIN}`)
         traefik.http.routers.vault.service: vault
         traefik.http.routers.vault.entrypoints: internal
@@ -180,7 +180,7 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: true
+        traefik.enable: "true"
         traefik.http.routers.git.rule: Host(`git.${DOMAIN}`)
         traefik.http.routers.git.service: git
         traefik.http.routers.git.entrypoints: websecure
