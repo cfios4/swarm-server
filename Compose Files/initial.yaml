@@ -38,8 +38,8 @@ services:
       - --certificatesresolvers.cf.acme.storage=/letsencrypt/acme.json
       - --certificatesresolvers.cf.acme.httpChallenge.entryPoint=web
     environment:
-      - TZ=${TZ}
-      - CF_DNS_API_TOKEN=bD9fV0AK5MUEwj8nFLSnwh0zmhIODxt6-955dIRK
+      TZ: ${TZ}
+      CF_DNS_API_TOKEN: bD9fV0AK5MUEwj8nFLSnwh0zmhIODxt6-955dIRK
     volumes:
       - ${APPDATA_MNT}/traefik:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -58,8 +58,8 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ=${TZ}
-      - PASSWORD=changeme
+      TZ: ${TZ}
+      PASSWORD: changeme
     volumes:
       - ${APPDATA_MNT}/flame:/app/data
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -81,7 +81,7 @@ services:
     networks:
       - macvlan4home
     environment:
-      - TZ=${TZ}
+      TZ: ${TZ}
     volumes:
       - ${APPDATA_MNT}/adguard:/opt/adguardhome
     labels:
@@ -105,9 +105,9 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ=${TZ}
-      - MINIO_ROOT_USER=admin
-      - MINIO_ROOT_PASSWORD=changeme
+      TZ: ${TZ}
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: changeme
     command: 'server /data'
     volumes:
       - ${APPDATA_MNT}/minio:/data

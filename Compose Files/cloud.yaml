@@ -17,7 +17,7 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ=${TZ}
+      TZ: ${TZ}
     tmpfs:
       - /config
     labels:
@@ -40,19 +40,19 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ=${TZ}
-      - NEXTCLOUD_TRUSTED_DOMAINS=cloud.${DOMAIN}
-      - NEXTCLOUD_ADMIN_USER=casey
-      - NEXTCLOUD_ADMIN_PASSWORD=changeme
-      - SQLITE_DATABASE=nextcloud
-      - OBJECTSTORE_S3_HOST=minio
-      - OBJECTSTORE_S3_BUCKET=nextcloud
-      - OBJECTSTORE_S3_KEY=admin
-      - OBJECTSTORE_S3_SECRET=changeme
-      - OBJECTSTORE_S3_PORT=9000
-      - OBJECTSTORE_S3_SSL=false
-      - OBJECTSTORE_S3_USEPATH_STYLE=true
-      - OBJECTSTORE_S3_AUTOCREATE=true
+      TZ: ${TZ}
+      NEXTCLOUD_TRUSTED_DOMAINS: cloud.${DOMAIN}
+      NEXTCLOUD_ADMIN_USER: casey
+      NEXTCLOUD_ADMIN_PASSWORD: changeme
+      SQLITE_DATABASE: nextcloud
+      OBJECTSTORE_S3_HOST: minio
+      OBJECTSTORE_S3_BUCKET: nextcloud
+      OBJECTSTORE_S3_KEY: admin
+      OBJECTSTORE_S3_SECRET: changeme
+      OBJECTSTORE_S3_PORT: '9000'
+      OBJECTSTORE_S3_SSL: 'false'
+      OBJECTSTORE_S3_USEPATH_STYLE: 'true'
+      OBJECTSTORE_S3_AUTOCREATE: 'true'
     volumes:
       - ${APPDATA_MNT}/nextcloud:/var/www/html
     labels:
@@ -75,7 +75,7 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ=${TZ}
+      TZ: ${TZ}
     tmpfs:
       - /var/log/onlyoffice
 
@@ -93,25 +93,25 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ=${TZ}
-      - MICROBIN_ADMIN_USERNAME=admin
-      - MICROBIN_ADMIN_PASSWORD=changeme
-      - MICROBIN_EDITABLE='true'
-      - MICROBIN_HIGHLIGHTSYNTAX='true'
-      - MICROBIN_PORT=80
-      - MICROBIN_BIND=0.0.0.0
-      - MICROBIN_PRIVATE='true'
-      - MICROBIN_PUBLIC_PATH=https://bin.${DOMAIN}/
-      - MICROBIN_SHOW_READ_STATS='true'
-      - MICROBIN_TITLE=cafio
-      - MICROBIN_ENABLE_BURN_AFTER='true'
-      - MICROBIN_WIDE='true'
-      - MICROBIN_QR='true'
-      - MICROBIN_EXTERNAL_PASTA='true'
-      - MICROBIN_ENABLE_READONLY='true'
-      - MICROBIN_ENCRYPTION_CLIENT_SIDE='true'
-      - MICROBIN_ENCRYPTION_SERVER_SIDE='true'
-      - MICROBIN_DISABLE_TELEMETRY='true'
+      TZ: ${TZ}
+      MICROBIN_ADMIN_USERNAME: admin
+      MICROBIN_ADMIN_PASSWORD: changeme
+      MICROBIN_EDITABLE: 'true'
+      MICROBIN_HIGHLIGHTSYNTAX: 'true'
+      MICROBIN_PORT: '80'
+      MICROBIN_BIND: '0.0.0.0'
+      MICROBIN_PRIVATE: 'true'
+      MICROBIN_PUBLIC_PATH: https://bin.${DOMAIN}/
+      MICROBIN_SHOW_READ_STATS: 'true'
+      MICROBIN_TITLE: cafio
+      MICROBIN_ENABLE_BURN_AFTER: 'true'
+      MICROBIN_WIDE: 'true'
+      MICROBIN_QR: 'true'
+      MICROBIN_EXTERNAL_PASTA: 'true'
+      MICROBIN_ENABLE_READONLY: 'true'
+      MICROBIN_ENCRYPTION_CLIENT_SIDE: 'true'
+      MICROBIN_ENCRYPTION_SERVER_SIDE: 'true'
+      MICROBIN_DISABLE_TELEMETRY: 'true'
     tmpfs:
       - /app/microbin_data
     labels:
@@ -129,12 +129,12 @@ services:
         traefik.http.routers.code.rule: Host(`code.${DOMAIN}`)
         traefik.http.routers.code.service: code
         traefik.http.routers.code.entrypoints: websecure
-        traefik.http.services.code.loadbalancer.server.port: 3000
+        traefik.http.services.code.loadbalancer.server.port: '3000'
         traefik.http.routers.code.tls.certresolver: cf
     networks:
       - overlaynet
     environment:
-      - TZ=${TZ}
+      TZ: ${TZ}
     volumes:
       - ${APPDATA_MNT}/vscode:/config
     labels:
@@ -157,16 +157,16 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ=${TZ}
-      - DOMAIN=https://vault.${DOMAIN}/
-      - SENDS_ALLOWED='true'
-      - EMERGENCY_ACCESS_ALLOWED='true'
-      - WEB_VAULT_ENABLED='true'
-      - SIGNUPS_ALLOWED='false'
-      - SIGNUPS_VERIFY='false'
-      - SIGNUPS_DOMAINS_WHITELIST=${DOMAIN}
-      - YUBICO_CLIENT_ID=92307
-      - YUBICO_SECRET_KEY=72o9iOvaz1yUO+6MomnE7EkPNgw=
+      TZ: ${TZ}
+      DOMAIN: https://vault.${DOMAIN}/
+      SENDS_ALLOWED: 'true'
+      EMERGENCY_ACCESS_ALLOWED: 'true'
+      WEB_VAULT_ENABLED: 'true'
+      SIGNUPS_ALLOWED: 'false'
+      SIGNUPS_VERIFY: 'false'
+      SIGNUPS_DOMAINS_WHITELIST: ${DOMAIN}
+      YUBICO_CLIENT_ID: '92307'
+      YUBICO_SECRET_KEY: 72o9iOvaz1yUO+6MomnE7EkPNgw=
     volumes:
       - ${APPDATA_MNT}/vaultwarden:/data
     labels:
@@ -189,14 +189,14 @@ services:
     networks:
       - overlaynet
     environment:
-      - TZ=${TZ}
-      - PROTOCOL=https
-      - DOMAIN=git.${DOMAIN}
-      - HTTP_PORT=3000
-      - APP_NAME=Gitea
-      - SHOW_USER_EMAIL=false
-      - REVERSE_PROXY_TRUSTED_PROXIES=127.0.0.0/8,::1/128, 192.168.45.0/24, cafio.co
-      - EMAIL_DOMAIN_ALLOWLIST=${DOMAIN}
+      TZ: ${TZ}
+      PROTOCOL: https
+      DOMAIN: git.${DOMAIN}
+      HTTP_PORT: '3000'
+      APP_NAME: Gitea
+      SHOW_USER_EMAIL: 'false'
+      REVERSE_PROXY_TRUSTED_PROXIES: 127.0.0.0/8,::1/128, 192.168.45.0/24, cafio.co
+      EMAIL_DOMAIN_ALLOWLIST: ${DOMAIN}
     volumes:
       - ${APPDATA_MNT}/gitea/config:/etc/gitea
       - ${APPDATA_MNT}/gitea/data:/var/lib/gitea
