@@ -24,8 +24,7 @@ services:
       ALLOWED_NETWORKS: ${SUBNET},100.64.0.0/255.192.0.0,10.0.0.0/255.0.0.0
     volumes:
       - /mnt/cluster/appdata/plex:/config
-    volumes_from:
-      - sabnzbd:ro
+      - /mnt/cluster/media:/data:ro
     tmpfs:
       - /transcode
     labels:
@@ -53,8 +52,7 @@ services:
       - sabnzbd
     volumes:
       - /mnt/cluster/appdata/radarr:/config
-    volumes_from:
-      - sabnzbd
+      - ${MEDIA_MNT}:/data
     labels:
       - flame.type=app
       - flame.name=Radarr
@@ -81,8 +79,7 @@ services:
       - sabnzbd
     volumes:
       - /mnt/cluster/appdata/sonarr:/config
-    volumes_from:
-      - sabnzbd
+      - ${MEDIA_MNT}:/data
     labels:
       - flame.type=app
       - flame.name=Sonarr
