@@ -89,7 +89,6 @@ services:
       MICROBIN_ADMIN_PASSWORD: changeme
       MICROBIN_EDITABLE: 'true'
       MICROBIN_HIGHLIGHTSYNTAX: 'true'
-      MICROBIN_PORT: '80'
       MICROBIN_BIND: '0.0.0.0'
       MICROBIN_PRIVATE: 'true'
       MICROBIN_PUBLIC_PATH: https://bin.${DOMAIN}/
@@ -120,7 +119,7 @@ services:
         traefik.http.routers.code.rule: Host(`code.${DOMAIN}`)
         traefik.http.routers.code.service: code
         traefik.http.routers.code.entrypoints: websecure
-        traefik.http.services.code.loadbalancer.server.port: '3000'
+        traefik.http.services.code.loadbalancer.server.port: 3000
         traefik.http.routers.code.tls.certresolver: cf
     networks:
       - overlaynet
@@ -162,7 +161,7 @@ services:
       - /mnt/cluster/appdata/vaultwarden:/data
     labels:
       - flame.type=app
-      - flame.name=Microbin
+      - flame.name=Vaultwarden
       - flame.icon=lock
       - flame.url=https://vault.${DOMAIN}/
 
@@ -191,11 +190,9 @@ services:
     volumes:
       - /mnt/cluster/appdata/gitea/config:/etc/gitea
       - /mnt/cluster/appdata/gitea/data:/var/lib/gitea
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
     labels:
       - flame.type=app
-      - flame.name=Microbin
+      - flame.name=Gitea
       - flame.icon=git
       - flame.url=https://git.${DOMAIN}/
 
