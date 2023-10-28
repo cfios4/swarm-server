@@ -91,37 +91,6 @@ services:
       - flame.url=https://adguard.lan/
       - flame.visibility=hidden
 
-  minio:
-    image: minio/minio:latest
-    deploy:
-      mode: global
-      labels:
-        traefik.enable: "true"
-        traefik.http.routers.minio.rule: Host(`s3.${DOMAIN}`)
-        traefik.http.routers.minio.entrypoints: internal
-        traefik.http.routers.minio.service: minio
-        traefik.http.services.minio.loadbalancer.server.port: 9001
-        traefik.http.routers.minio.tls.certresolver: cf
-    networks:
-      - overlaynet
-    environment:
-      TZ: ${TZ}
-      MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: changeme
-    command: 'server /data'
-    volumes:
-      - /mnt/cluster/appdata/minio:/data
-  
-  minio-client:
-    image: minio/mc
-    deploy:
-      replicas: 1
-    networks:
-      - overlaynet
-    depends_on:
-      - minio
-    entrypoint: sh -c "mc alias set minio http://minio:9000 minioadmin minioadmin && mc mb minio/{radarr,sonarr,sabnzbd,caddy,flame,plex,gitea,vaultwarden,vscode}"
-
 networks:
   overlaynet:
     driver: overlay

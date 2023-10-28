@@ -45,14 +45,6 @@ services:
       NEXTCLOUD_ADMIN_USER: casey
       NEXTCLOUD_ADMIN_PASSWORD: changeme
       SQLITE_DATABASE: nextcloud
-      OBJECTSTORE_S3_HOST: minio
-      OBJECTSTORE_S3_BUCKET: nextcloud
-      OBJECTSTORE_S3_KEY: admin
-      OBJECTSTORE_S3_SECRET: changeme
-      OBJECTSTORE_S3_PORT: '9000'
-      OBJECTSTORE_S3_SSL: 'false'
-      OBJECTSTORE_S3_USEPATH_STYLE: 'true'
-      OBJECTSTORE_S3_AUTOCREATE: 'true'
     volumes:
       - /mnt/cluster/appdata/nextcloud:/var/www/html
     labels:
