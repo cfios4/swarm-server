@@ -32,13 +32,13 @@ services:
       - --entrypoints.web.http.redirections.entryPoint.scheme=https
       - --entrypoints.websecure.address=:443
       - --entrypoints.internal.address=:65080
-      - --certificatesresolvers.cf.acme.dnschallenge=true
-      - --certificatesresolvers.cf.acme.dnschallenge.provider=cloudflare
       - --certificatesresolvers.cf.acme.email=cfios@mf.me
       - --certificatesresolvers.cf.acme.storage=/letsencrypt/acme.json
-      - --certificatesresolvers.cf.acme.httpChallenge.entryPoint=web
+      - --certificatesresolvers.cf.acme.tlschallenge.
+      - --certificatesresolvers.cf.acme.dnschallenge.provider=cloudflare
     environment:
       TZ: ${TZ}
+      CF_API_EMAIL: cfios@outlook.com
       CF_DNS_API_TOKEN: bD9fV0AK5MUEwj8nFLSnwh0zmhIODxt6-955dIRK
     volumes:
       - /mnt/cluster/appdata/traefik:/letsencrypt
