@@ -19,7 +19,7 @@ services:
       - overlaynet
     environment:
       TZ: ${TZ}
-      PLEX_CLAIM: $(docker exec plex sh -c 'echo "#!/bin/bash" > plex_claim.sh && echo "curl -s "https://plex.tv/api/claim/token?X-Plex-Token: $(grep PlexOnlineToken config/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml | cut -d '\'' '\'' -f 4 | cut -d '\''\"'\'' -f 2)\" | cut -d '\''\"'\'' -f 2" >> plex_claim.sh && chmod +x plex_claim.sh' ; docker exec plex ./plex_claim.sh)
+      PLEX_CLAIM: claim-SXc1pUGJgWPDzRadJdNC
       ADVERTISE_IP: https://${HOSTNAME}.lan:32400,https://${TAILSCALEIP}:32400,https://watch.${DOMAIN}:443
       ALLOWED_NETWORKS: ${SUBNET},100.64.0.0/255.192.0.0,10.0.0.0/255.0.0.0
     volumes:
