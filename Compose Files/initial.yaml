@@ -34,7 +34,7 @@ services:
       - --entrypoints.internal.address=:65080
       - --certificatesresolvers.cf.acme.dnschallenge=true
       - --certificatesresolvers.cf.acme.dnschallenge.provider=cloudflare
-      - --certificatesresolvers.cf.acme.email=cfios@mailfence.com
+      - --certificatesresolvers.cf.acme.email=cfios@mf.me
       - --certificatesresolvers.cf.acme.storage=/letsencrypt/acme.json
       - --certificatesresolvers.cf.acme.httpChallenge.entryPoint=web
     environment:
