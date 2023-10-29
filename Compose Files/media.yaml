@@ -38,7 +38,7 @@ services:
       replicas: 1
       labels:
         traefik.enable: "true"
-        traefik.http.routers.radarr.rule: Host(`${DOMAIN}`) && PathPrefix(`/radarr`)
+        traefik.http.routers.radarr.rule: Host(`${DOMAIN}`) && PathPrefix(`/radarr`) && ClientIP(`192.168.45.0/24`)
         traefik.http.routers.radarr.service: radarr
         traefik.http.routers.radarr.entrypoints: websecure
         traefik.http.services.radarr.loadbalancer.server.port: 7878
