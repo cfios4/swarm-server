@@ -39,7 +39,6 @@ services:
       labels:
         traefik.enable: "true"
         traefik.http.routers.radarr.rule: Host(`${DOMAIN}`) && PathPrefix(`/radarr`)
-        traefik.http.middlewares.radarr.basicauth.users: admin:8f3c47cc78c56dcf58438529f7c1d1aa
         traefik.http.routers.radarr.service: radarr
         traefik.http.routers.radarr.entrypoints: websecure
         traefik.http.services.radarr.loadbalancer.server.port: 7878
