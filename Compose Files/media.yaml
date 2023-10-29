@@ -38,7 +38,7 @@ services:
       replicas: 1
       labels:
         traefik.enable: "true"
-        traefik.http.routers.radarr.rule: Host(`radarr.${DOMAIN}`) && ClientIP(`192.168.45.0/24,100.64.0.0/10`)
+        traefik.http.routers.radarr.rule: Host(`radarr.${DOMAIN}`) && ClientIP(`192.168.45.0/24`, `100.64.0.0/10`)
         traefik.http.routers.radarr.service: radarr
         traefik.http.routers.radarr.entrypoints: websecure
         traefik.http.services.radarr.loadbalancer.server.port: 7878
@@ -65,7 +65,7 @@ services:
       replicas: 1
       labels:
         traefik.enable: "true"
-        traefik.http.routers.sonarr.rule: Host(`sonarr.${DOMAIN}`) && ClientIP(`192.168.45.0/24,100.64.0.0/10`)
+        traefik.http.routers.sonarr.rule: Host(`sonarr.${DOMAIN}`) && ClientIP(`192.168.45.0/24`, `100.64.0.0/10`)
         traefik.http.routers.sonarr.service: sonarr
         traefik.http.routers.sonarr.entrypoints: websecure
         traefik.http.services.sonarr.loadbalancer.server.port: 8989
@@ -92,7 +92,7 @@ services:
       replicas: 1
       labels:
         traefik.enable: "true"
-        traefik.http.routers.sabnzbd.rule: Host(`sabnzbd.${DOMAIN}`) && ClientIP(`192.168.45.0/24,100.64.0.0/10`)
+        traefik.http.routers.sabnzbd.rule: Host(`sabnzbd.${DOMAIN}`) && ClientIP(`192.168.45.0/24`, `100.64.0.0/10`)
         traefik.http.routers.sabnzbd.service: sabnzbd
         traefik.http.routers.sabnzbd.entrypoints: websecure
         traefik.http.services.sabnzbd.loadbalancer.server.port: 8080
