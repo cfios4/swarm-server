@@ -42,6 +42,7 @@ services:
         traefik.http.routers.radarr.service: radarr
         traefik.http.routers.radarr.entrypoints: websecure
         traefik.http.services.radarr.loadbalancer.server.port: 7878
+        traefik.http.routers.radarr.tls.certresolver: cf
     networks:
       - overlaynet
     environment:
@@ -68,6 +69,7 @@ services:
         traefik.http.routers.sonarr.service: sonarr
         traefik.http.routers.sonarr.entrypoints: websecure
         traefik.http.services.sonarr.loadbalancer.server.port: 8989
+        traefik.http.routers.sonarr.tls.certresolver: cf
     networks:
       - overlaynet
     environment:
@@ -94,6 +96,7 @@ services:
         traefik.http.routers.sabnzbd.service: sabnzbd
         traefik.http.routers.sabnzbd.entrypoints: websecure
         traefik.http.services.sabnzbd.loadbalancer.server.port: 8080
+        traefik.http.routers.sabnzbd.tls.certresolver: cf
     networks:
       - overlaynet
     environment:
