@@ -48,6 +48,8 @@ services:
       POSTGRES_USER: nextcloud
       POSTGRES_PASSWORD: nextcloud
       POSTGRES_HOST: postgresdb
+    depends_on:
+      - postgresdb
     volumes:
       - /mnt/cluster/appdata/nextcloud:/var/www/html
     labels:
