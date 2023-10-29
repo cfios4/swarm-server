@@ -27,7 +27,7 @@ services:
       - flame.url=https://drop.${DOMAIN}/
 
   nextcloud:
-    image: nextcloud:latest
+    image: nextcloud:26
     deploy:
       replicas: 1
       labels:
@@ -44,12 +44,12 @@ services:
       NEXTCLOUD_ADMIN_USER: casey
       NEXTCLOUD_ADMIN_PASSWORD: changeme
       NEXTCLOUD_TRUSTED_DOMAINS: cloud.${DOMAIN}
-      MYSQL_DATABASE: nextcloud
-      MYSQL_USER: nextcloud
-      MYSQL_PASSWORD: nextcloud
-      MYSQL_HOST: mysqldb
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: nextcloud
+      POSTGRES_PASSWORD: nextcloud
+      POSTGRES_HOST: postgresdb
     depends_on:
-      - mysqldb
+      - postgresdb
     volumes:
       - ${APPDATA_MNT}/nextcloud:/var/www/html
     labels:
@@ -58,18 +58,18 @@ services:
       - flame.icon=cloud
       - flame.url=https://cloud.${DOMAIN}/
 
-  mysqldb:
-    image: mysql:8
+  postgresdb:
+    image: postgres:16
     deploy:
       replicas: 1
     networks:
       - overlaynet
     environment:
-      MYSQL_DATABASE: nextcloud
-      MYSQL_USER: nextcloud
-      MYSQL_PASSWORD: nextcloud
+      POSTGRES_USER: nextcloud
+      POSTGRES_PASSWORD: nextcloud
+      POSTGRES_DB: nextcloud
     volumes:
-      - ${APPDATA_MNT}/mysql:/var/lib/mysql
+      - ${APPDATA_MNT}/postgres:/var/lib/postgresql/data
 
   onlyoffice:
     image: onlyoffice/documentserver:latest
