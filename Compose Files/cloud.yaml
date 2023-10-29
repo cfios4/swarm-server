@@ -49,7 +49,7 @@ services:
       MYSQL_PASSWORD: nextcloud
       MYSQL_HOST: mysqldb
     depends_on:
-      - postgresdb
+      - mysqldb
     volumes:
       - ${APPDATA_MNT}/nextcloud:/var/www/html
     labels:
