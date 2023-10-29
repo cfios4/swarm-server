@@ -38,7 +38,8 @@ services:
       replicas: 1
       labels:
         traefik.enable: "true"
-        traefik.http.routers.radarr.rule: Host(`${DOMAIN}`) && PathPrefix(`/radarr`) && ClientIP(`192.168.45.0/24`)
+        traefik.http.routers.radarr.rule: Host(`${DOMAIN}`) && PathPrefix(`/radarr`)
+        traefik.http.middlewares.radarr.basicauth.users: admin:8f3c47cc78c56dcf58438529f7c1d1aa
         traefik.http.routers.radarr.service: radarr
         traefik.http.routers.radarr.entrypoints: websecure
         traefik.http.services.radarr.loadbalancer.server.port: 7878
@@ -56,7 +57,7 @@ services:
       - flame.type=app
       - flame.name=Radarr
       - flame.icon=movie-open
-      - flame.url=https://watch.${DOMAIN}/radarr/
+      - flame.url=https://${DOMAIN}/radarr/
       - flame.visibility=hidden
 
   sonarr:
@@ -83,7 +84,7 @@ services:
       - flame.type=app
       - flame.name=Sonarr
       - flame.icon=youtube-tv
-      - flame.url=https://watch.${DOMAIN}/sonarr/
+      - flame.url=https://${DOMAIN}/sonarr/
       - flame.visibility=hidden
 
   sabnzbd:
@@ -108,7 +109,7 @@ services:
       - flame.type=app
       - flame.name=Sabnzbd
       - flame.icon=cloud-download
-      - flame.url=https://watch.${DOMAIN}/sabnzbd/
+      - flame.url=https://${DOMAIN}/sabnzbd/
       - flame.visibility=hidden
 
 networks:
