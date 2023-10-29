@@ -41,7 +41,7 @@ services:
       CF_API_EMAIL: cfios@outlook.com
       CF_DNS_API_TOKEN: bD9fV0AK5MUEwj8nFLSnwh0zmhIODxt6-955dIRK
     volumes:
-      - /mnt/cluster/appdata/traefik:/letsencrypt
+      - ${APPDATA_MNT}/traefik:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   flame:
@@ -61,7 +61,7 @@ services:
       TZ: ${TZ}
       PASSWORD: changeme
     volumes:
-      - /mnt/cluster/appdata/flame:/app/data
+      - ${APPDATA_MNT}/flame:/app/data
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   adguard:
@@ -82,7 +82,7 @@ services:
     environment:
       TZ: ${TZ}
     volumes:
-      - /mnt/cluster/appdata/adguard:/opt/adguardhome
+      - ${APPDATA_MNT}/adguard:/opt/adguardhome
     labels:
       - flame.type=app
       - flame.name=AdGuard Home

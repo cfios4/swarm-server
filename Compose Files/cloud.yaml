@@ -51,7 +51,7 @@ services:
     depends_on:
       - postgresdb
     volumes:
-      - /mnt/cluster/appdata/nextcloud:/var/www/html
+      - ${APPDATA_MNT}/nextcloud:/var/www/html
     labels:
       - flame.type=app
       - flame.name=Cloud
@@ -69,7 +69,7 @@ services:
       POSTGRES_PASSWORD: nextcloud
       POSTGRES_DB: nextcloud
     volumes:
-      - /mnt/cluster/appdata/postgres:/var/lib/postgresql/data
+      - ${APPDATA_MNT}/postgres:/var/lib/postgresql/data
 
   onlyoffice:
     image: onlyoffice/documentserver:latest
@@ -77,7 +77,7 @@ services:
       replicas: 1
       labels:
         traefik.enable: "true"
-        traefik.http.routers.office.rule: Host(`cloud.${DOMAIN}`) && PathPrefix ('/office')
+        traefik.http.routers.office.rule: Host(`office.${DOMAIN}`)
         traefik.http.routers.office.service: office
         traefik.http.routers.office.entrypoints: websecure
         traefik.http.services.office.loadbalancer.server.port: 80
@@ -144,7 +144,7 @@ services:
     environment:
       TZ: ${TZ}
     volumes:
-      - /mnt/cluster/appdata/vscode:/config
+      - ${APPDATA_MNT}/vscode:/config
     labels:
       - flame.type=app
       - flame.name=VSCode
@@ -176,7 +176,7 @@ services:
       YUBICO_CLIENT_ID: '92307'
       YUBICO_SECRET_KEY: 72o9iOvaz1yUO+6MomnE7EkPNgw=
     volumes:
-      - /mnt/cluster/appdata/vaultwarden:/data
+      - ${APPDATA_MNT}/vaultwarden:/data
     labels:
       - flame.type=app
       - flame.name=Vaultwarden
@@ -206,8 +206,8 @@ services:
       REVERSE_PROXY_TRUSTED_PROXIES: 127.0.0.0/8,::1/128, 192.168.45.0/24, ${DOMAIN}
       EMAIL_DOMAIN_ALLOWLIST: ${DOMAIN}
     volumes:
-      - /mnt/cluster/appdata/gitea/config:/data/gitea
-      - /mnt/cluster/appdata/gitea/data:/var/lib/gitea
+      - ${APPDATA_MNT}/gitea/config:/data/gitea
+      - ${APPDATA_MNT}/gitea/data:/var/lib/gitea
     labels:
       - flame.type=app
       - flame.name=Gitea
