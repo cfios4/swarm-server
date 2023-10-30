@@ -27,7 +27,7 @@ services:
       - flame.url=https://drop.${DOMAIN}/
 
   nextcloud:
-    image: nextcloud:25
+    image: nextcloud:27
     deploy:
       replicas: 1
       labels:
@@ -71,22 +71,22 @@ services:
     volumes:
       - ${APPDATA_MNT}/postgres:/var/lib/postgresql/data
 
-  onlyoffice:
-    image: onlyoffice/documentserver:latest
-    deploy:
-      replicas: 1
-      labels:
-        traefik.enable: "true"
-        traefik.http.routers.office.rule: Host(`office.${DOMAIN}`)
-        traefik.http.routers.office.service: office
-        traefik.http.routers.office.entrypoints: websecure
-        traefik.http.services.office.loadbalancer.server.port: 80
-    networks:
-      - overlaynet
-    environment:
-      TZ: ${TZ}
-    tmpfs:
-      - /var/log/onlyoffice
+  # onlyoffice:
+  #   image: onlyoffice/documentserver:latest
+  #   deploy:
+  #     replicas: 1
+  #     labels:
+  #       traefik.enable: "true"
+  #       traefik.http.routers.office.rule: Host(`office.${DOMAIN}`)
+  #       traefik.http.routers.office.service: office
+  #       traefik.http.routers.office.entrypoints: websecure
+  #       traefik.http.services.office.loadbalancer.server.port: 80
+  #   networks:
+  #     - overlaynet
+  #   environment:
+  #     TZ: ${TZ}
+  #   tmpfs:
+  #     - /var/log/onlyoffice
 
   microbin:
     image: danielszabo99/microbin:latest
