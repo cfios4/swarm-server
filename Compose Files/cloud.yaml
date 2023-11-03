@@ -171,6 +171,7 @@ services:
       DOMAIN: https://vault.${DOMAIN}/
       SENDS_ALLOWED: 'true'
       EMERGENCY_ACCESS_ALLOWED: 'true'
+      ADMIN_TOKEN: ''
       WEB_VAULT_ENABLED: 'true'
       SIGNUPS_ALLOWED: 'false'
       SIGNUPS_VERIFY: 'false'
