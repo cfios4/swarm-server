@@ -1,4 +1,4 @@
-## Global vars
+#!/bin/bash
 export APPDATA_MNT=/mnt/cluster/appdata
 export MEDIA_MNT=/mnt/cluster/media
 export CLUSTER_MNT=/mnt/cluster
