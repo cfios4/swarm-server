@@ -1,7 +1,6 @@
 # GlusterFS
 
 ```bash
-CLUSTER_MNT=/mnt/cluster
 ## All nodes with storage
 # Create brick folder   
 mkdir -p $CLUSTER_MNT/{appdata,media}
