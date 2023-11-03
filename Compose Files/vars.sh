@@ -6,7 +6,7 @@ export DOMAIN=cafio.co
 export TZ=America/New_York
 export SUBNET=192.168.45.0/255.255.255.0
 export TAILSCALEIP=$(tailscale ip -4)
-export PLEX_CLAIM=$(docker exec $(docker ps -f name=plex --format "{{.ID}}" | tail -n 1) sh -c 'curl -s "https://plex.tv/api/claim/token?X-Plex-Token=$(grep PlexOnlineToken config/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml | cut -d '\'' '\'' -f 4 | cut -d '\''"'\'' -f 2)" | cut -d '\''"'\'' -f 2')
+export PLEX_CLAIM=$(docker exec $(docker ps -f name=plex --format "{{.ID}}") sh -c 'curl -s "https://plex.tv/api/claim/token?X-Plex-Token=$(grep PlexOnlineToken config/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml | cut -d '\'' '\'' -f 4 | cut -d '\''"'\'' -f 2)" | cut -d '\''"'\'' -f 2')
 
 mkdir -p $APPDATA_MNT/{traefik,flame,gitea,nextcloud,postgres,vaultwarden,vscode,plex,radarr,sabnzbd,sonarr,}
 
