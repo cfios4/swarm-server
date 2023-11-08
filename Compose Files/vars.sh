@@ -1,7 +1,7 @@
 #!/bin/bash
+export CLUSTER_MNT=/mnt/cluster
 export APPDATA_MNT=/mnt/cluster/appdata
 export MEDIA_MNT=/mnt/cluster/media
-export CLUSTER_MNT=/mnt/cluster
 export DOMAIN=cafio.co
 export TZ=America/New_York
 export SUBNET=192.168.45.0/255.255.255.0
@@ -13,5 +13,5 @@ mkdir -p $APPDATA_MNT/{traefik,flame,gitea,nextcloud,postgres,vaultwarden,vscode
 docker network create --config-only --subnet 192.168.45.0/24 -o parent=enp6s18 --ip-range=192.168.45.254/32 agh-ip
 docker network create -d macvlan --scope swarm --attachable --config-from agh-ip macvlan4home
 
-############################################################
+##################### NOTES ###########################
 ## glusterfs is probably the best way to pool storage
