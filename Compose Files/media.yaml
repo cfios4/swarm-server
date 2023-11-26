@@ -12,8 +12,8 @@ services:
         traefik.http.routers.plex.rule: Host(`watch.${DOMAIN}`)
         traefik.http.routers.plex.service: plex
         traefik.http.routers.plex.entrypoints: websecure
-        traefik.http.services.plex.loadbalancer.server.port: 32400
         traefik.http.routers.plex.tls.certresolver: cf
+        traefik.http.services.plex.loadbalancer.server.port: 32400
     networks:
       - overlaynet
     environment:
@@ -31,6 +31,23 @@ services:
       - flame.name=Plex
       - flame.icon=plex
       - flame.url=https://watch.${DOMAIN}/
+
+  overseerr:
+    image: sctx/overseerr:latest
+    deploy:
+      replicas: 1
+      labels:
+        traefik.enable: "true"
+        traefik.http.routers.overseerr.rule: Host(`request.${DOMAIN}`)
+        traefik.http.routers.overseerr.service: overseerr
+        traefik.http.routers.overseerr.entrypoints: websecure
+        traefik.http.routers.overseerr.tls.certresolver: cf
+        traefik.http.services.overseerr.loadbalancer.server.port: 5055
+    environment:
+      LOG_LEVEL: debug
+      TZ: ${TZ}
+    volumes:
+      - ${APPDATA_MNT}/overseerr:/app/config
 
   radarr:
     image: hotio/radarr:latest
