@@ -1,6 +1,17 @@
 #!/bin/bash
-###################### All ran on swarm0 ######################
+###################### Ran from swarm0  ######################
+###################### BEGIN NODE SETUP ######################
 ## Vars
+export CLUSTER_MNT=/mnt/cluster
+export APPDATA_MNT=/mnt/cluster/appdata
+export MEDIA_MNT=/mnt/cluster/media
+export DOMAIN=cafio.co
+export TZ=America/New_York
+export SUBNET=192.168.45.0/255.255.255.0
+export TAILSCALEIP=$(tailscale ip -4)
+export PLEX_CLAIM=$(docker exec $(docker ps -f name=plex --format "{{.ID}}") sh -c 'curl -s "https://plex.tv/api/claim/token?X-Plex-Token=$(grep PlexOnlineToken config/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml | cut -d '\'' '\'' -f 4 | cut -d '\''"'\'' -f 2)" | cut -d '\''"'\'' -f 2')
+
+
 swarm0=$(hostname -I | grep -oE '192\.168\.[0-9]+\.[0-9]+')
 swarm1=
 swarm2=
@@ -15,8 +26,6 @@ apk update
 apk add docker
 rc-update add docker boot
 service docker start
-# Create gluster bricks
-mkdir -p /mnt/cluster/{appdata,media}
 # Create SSH key and copy it to cluster
 ssh-keygen -b 2048 -t rsa -f .ssh/id_rsa -q -N ""
 ssh-copy-id swarm@swarm{1..3}
@@ -53,6 +62,8 @@ printf "$swarm0    swarm0
 $swarm1    swarm1
 $swarm2    swarm2
 $swarm3    swarm3" >> /etc/hosts
+
+mkdir -p $CLUSTER_MNT/{media,appdata/{traefik,flame,gitea,nextcloud,postgres,vaultwarden,vscode,plex,radarr,sonarr,sabnzbd}}
 
 ## Join the Swarm as a worker using the manager token
 docker swarm join --token $manager_token $tailscaleip:2377
@@ -160,5 +171,15 @@ SSH
 # gluster volume start appdata
 # gluster volume start media
 
+
+###################### BEGIN SWARM SETUP ######################
+# all managers need to have docker network/s for pihole
+for node in $(docker node ls --filter "role=manager" --format "{{.Hostname}}") ; do
+    ssh swarm@$node docker network create --config-only -o parent=enp6s18 --subnet 192.168.45.0/24 --gateway 192.168.45.1 --ip-range=192.168.45.254/32 dns-ip \
+                    docker network create -d macvlan --scope swarm --attachable --config-from dns-ip macvlan4home
+done
+
+# this command will label all managers as having macvlan4home=true, do after the previous
+docker node update --label-add "macvlan4home=true" $(docker node ls --filter "role=manager" --format "{{.ID}}")
 
 ### End of script
