@@ -52,27 +52,25 @@ services:
       - ${APPDATA_MNT}/traefik:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
-  homarr:
-    image: ghcr.io/ajnart/homarr:latest
+  flame:
+    image: pawelmalak/flame:latest
     deploy:
       replicas: 1
       labels:
         traefik.enable: "true"
-        traefik.http.routers.homarr.rule: Host(`${DOMAIN}`)
-        traefik.http.routers.homarr.service: homarr
-        traefik.http.routers.homarr.entrypoints: websecure
-        traefik.http.routers.homarr.tls.certresolver: cf
-        traefik.http.services.homarr.loadbalancer.server.port: 7575
+        traefik.http.routers.flame.rule: Host(`${DOMAIN}`)
+        traefik.http.routers.flame.service: flame
+        traefik.http.routers.flame.entrypoints: websecure
+        traefik.http.services.flame.loadbalancer.server.port: 5005
+        traefik.http.routers.flame.tls.certresolver: cf
     networks:
       - overlaynet
     environment:
-      DEFAULT_COLOR_SCHEME: dark
       TZ: ${TZ}
+      PASSWORD: changeme
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${APPDATA_MNT}/homarr/configs:/app/data/configs
-      - ${APPDATA_MNT}/homarr/icons:/app/public/icons
-      - ${APPDATA_MNT}/homarr/data:/data
+      - ${APPDATA_MNT}/flame:/app/data
 
   pihole:
     image: cbcrowe/pihole-unbound:latest
@@ -87,21 +85,32 @@ services:
       placement:
         constraints: 
           - node.hostname == swarm0 # Force swarm0 because this will be the only one with the macvlan setup
+          - node.labels.macvlan4home == true
+    networks:
+      - macvlan4home
+    cap_add: # needed if using as DHCP server
+      - NET_ADMIN
     environment:
       TZ: ${TZ}
-      FTLCONF_LOCAL_IPV4: "192.168.45.254"
-      REV_SERVER_TARGET: "192.168.45.1"
+      FTLCONF_LOCAL_IPV4: 192.168.45.254
+      REV_SERVER_TARGET: 192.168.45.1
       REV_SERVER_DOMAIN: lan
       REV_SERVER_CIDR: 192.168.45.0/24
       REV_SERVER: "true"
       PIHOLE_DNS_: 127.0.0.1#5335
       WEBPASSWORD: changeme
-      WEBTHEME: default-dark
+      WEBTHEME: default-dark 
       DNSSEC: "true"
       DNSMASQ_LISTENING: local
     volumes:
       - ${APPDATA_MNT}/pihole:/etc/pihole:rw
       - ${APPDATA_MNT}/pihole/unbound:/etc/dnsmasq.d:rw
+    labels:
+      - flame.type=app
+      - flame.name=PiHole
+      - flame.icon=pi-hole
+      - flame.url=https://pihole.lan/
+      - flame.visibility=hidden
 
 networks:
   overlaynet:
