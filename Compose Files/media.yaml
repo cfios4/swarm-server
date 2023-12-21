@@ -48,6 +48,11 @@ services:
       TZ: ${TZ}
     volumes:
       - ${APPDATA_MNT}/overseerr:/app/config
+    labels:
+      - flame.type=app
+      - flame.name=Overseerr
+      - flame.icon=movie-search
+      - flame.url=https://search.${DOMAIN}/
 
   radarr:
     image: hotio/radarr:latest
