@@ -27,7 +27,7 @@ services:
       - flame.url=https://drop.${DOMAIN}/
 
   nextcloud:
-    image: nextcloud:28
+    image: nextcloud:latest
     deploy:
       replicas: 1
       labels:
