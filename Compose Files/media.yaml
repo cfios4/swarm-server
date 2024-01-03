@@ -20,7 +20,7 @@ services:
       TZ: ${TZ}
       PLEX_CLAIM: ${PLEX_CLAIM} #https://plex.tv/claim
       ADVERTISE_IP: https://${HOSTNAME}.lan:32400,https://${TAILSCALEIP}:32400,https://watch.${DOMAIN}:443
-      ALLOWED_NETWORKS: ${SUBNET},100.64.0.0/255.192.0.0,10.0.0.0/255.0.0.0
+      ALLOWED_NETWORKS: 192.168.45.0/24,100.64.0.0/10,10.0.0.0/8
     volumes:
       - ${APPDATA_MNT}/plex:/config
       - ${MEDIA_MNT}:/data:ro
