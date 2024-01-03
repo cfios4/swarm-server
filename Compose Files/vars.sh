@@ -11,8 +11,8 @@ mkdir -p $CLUSTER_MNT/{media,appdata/{traefik,flame,gitea,nextcloud,postgres,vau
 
 # all managers need to have docker network/s for pihole
 for node in $(docker node ls --filter "role=manager" --format "{{.Hostname}}") ; do
-    ssh swarm@$node docker network create --config-only -o parent=$(ip link show | grep -Po '^\d+: \K(eth|eno|enp)[^:]+') --subnet $(echo $(ipcalc -n $(ip a | grep -E 'enp|eth|eno' | grep inet | awk '{print $2}') --no-decorate)/$(ipcalc -p $(ip a | grep -E 'enp|eth|eno' | grep inet | awk '{print $2}') --no-decorate)) --gateway $(ip route | grep default | awk '{print $3}') --ip-range=$(ip a | grep -E 'enp|eth|eno' | grep inet | awk '{print $2}' | awk -F / '{print $1}' | awk -F . '{print $1"."$2"."$3}').254/32 dns-ip \
-                    docker network create -d macvlan --scope swarm --attachable --config-from dns-ip macvlan4home
+    ssh swarm@$node docker network create --config-only -o parent=$(ip link show | grep -Po '^\d+: \K(eth|eno|enp)[^:]+') --subnet $(echo $(ipcalc -n $(ip a | grep -E 'enp|eth|eno' | grep inet | awk '{print $2}') --no-decorate)/$(ipcalc -p $(ip a | grep -E 'enp|eth|eno' | grep inet | awk '{print $2}') --no-decorate)) --gateway $(ip route | grep default | awk '{print $3}') --ip-range=$(ip a | grep -E 'enp|eth|eno' | grep inet | awk '{print $2}' | awk -F / '{print $1}' | awk -F . '{print $1"."$2"."$3}').254/32 macvlan4home \
+                    docker network create -d macvlan --scope swarm --attachable --config-from macvlan4home dns-ip
 done
 # this command will label all managers as having macvlan4home=true, do after the previous
 docker node update --label-add "macvlan4home=true" $(docker node ls --filter "role=manager" --format "{{.ID}}")
