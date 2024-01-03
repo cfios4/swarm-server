@@ -78,14 +78,13 @@ services:
       replicas: 1
       labels:
         traefik.enable: "true"
-        traefik.http.routers.pihole.rule: Host(`pihole.lan`) && ClientIP(`192.168.45.0/24`, `100.64.0.0/10`)
+        traefik.http.routers.pihole.rule: Host(`pi.hole`) && ClientIP(`192.168.45.0/24`, `100.64.0.0/10`)
         traefik.http.routers.pihole.service: pihole
         traefik.http.routers.pihole.entrypoints: internal
         traefik.http.services.pihole.loadbalancer.server.port: 80
       placement:
         constraints: 
-          - node.hostname == swarm0 # Force swarm0 because this will be the only one with the macvlan setup
-          - node.labels.macvlan4home == true
+          - node.labels.macvlan4home == true # Force swarm0 because this will be the only one with the macvlan setup
     networks:
       - macvlan4home
     cap_add: # needed if using as DHCP server
@@ -94,9 +93,9 @@ services:
       TZ: ${TZ}
       FTLCONF_LOCAL_IPV4: 192.168.45.254
       REV_SERVER_TARGET: 192.168.45.1
-      REV_SERVER_DOMAIN: lan
-      REV_SERVER_CIDR: 192.168.45.0/24
       REV_SERVER: "true"
+      REV_SERVER_CIDR: 192.168.45.0/24
+      REV_SERVER_DOMAIN: lan
       PIHOLE_DNS_: 127.0.0.1#5335
       WEBPASSWORD: changeme
       WEBTHEME: default-dark 
@@ -109,7 +108,7 @@ services:
       - flame.type=app
       - flame.name=PiHole
       - flame.icon=pi-hole
-      - flame.url=https://pihole.lan/
+      - flame.url=http://pi.hole/
       - flame.visibility=hidden
 
 networks:
