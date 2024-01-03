@@ -72,11 +72,15 @@ docker swarm join --token $manager_token $tailscaleip:2377
 # apk add glusterfs glusterfs-server
 # rc-update add glusterd
 # service glusterd start
-# ## Join the GlusterFS cluster on swarm 1
+## Join the GlusterFS cluster on swarm 1
+# if [ "$hostname" != swarm0 ] ; then
 # gluster peer probe swarm0
+# fi
 SSH
 done
 
+##########################################################################
+##########################################################################
 
 ### swarm 1
 ssh swarm@swarm1 ash <<SSH
