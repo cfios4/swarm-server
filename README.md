@@ -11,7 +11,7 @@ There are 3 seperate stacks of services:
 3. `Media`
     - This stack deploys anything related to the media server
 
-I want to have these stacks deployed like this: `curl https://github.com/raw/.../compose.yaml | docker stack up -c - initial` \
+I want to have these stacks deployed like this: `curl https://raw.githubusercontent.com/cfios4/swarm-server/main/Compose%20Files/{initial,media,cloud}.yaml | docker stack up -c - initial` \
 ~~The stack yamls will need to be recreated in the Git repo to just be the yaml as opposed to [detailed version](https://git.cafio.co/casey/swarm-server/src/commit/0a699d4e96c83b28e40b68bbc9828bb2e1b3d2be/Compose%20File%28s%29.md)~~
 
 ## UFW
