@@ -1,8 +1,7 @@
 #!/bin/bash
-###################### Ran from swarm0  ######################
+###################### Ran from swarm0 ######################
 export CLUSTER_MNT=/mnt/cluster
 swarm=("swarm0" "swarm1" "swarm2" "swarm3")
-tailscaleip=$(tailscale ip -4)
 
 ### swarm 0
 ## Setup
@@ -14,7 +13,8 @@ service docker start
 
 ## Initialize Docker Swarm
 docker swarm init --advertise-addr tailscale0
-# Get manager and worker join token
+# Get variables for other nodes
+tailscaleip=$(tailscale ip -4)
 manager_token=$(docker swarm join-token manager -q)
 worker_token=$(docker swarm join-token worker -q)
 
@@ -26,7 +26,7 @@ worker_token=$(docker swarm join-token worker -q)
 
 ###################### BEGIN NODE SETUP ######################
 for node in ${swarm[@]} ; do
-    ssh swarm@swarm1 ash <<SSH
+    ssh swarm@$node ash <<SSH
 #!/bin/bash
 ## Setup
 # Install and enable Docker
@@ -37,15 +37,21 @@ service docker start
 
 mkdir -p $CLUSTER_MNT/{media,appdata/{traefik,flame,gitea,nextcloud,postgres,vaultwarden,vscode,plex,radarr,sonarr,sabnzbd}}
 
-## Join the Swarm as a worker using the manager token
-docker swarm join --token $manager_token $tailscaleip:2377
+
+if [ "$node" != swarm3 ] ; then
+    ## Join the Swarm as a manager if not swarm3
+    docker swarm join --token $manager_token $tailscaleip:2377
+else
+    ## Join the Swarm as a worker if swarm3
+    docker swarm join --token $worker_token $tailscaleip:2377
+fi
 
 ## Initialize GlusterFS on swarm 1
 # apk add glusterfs glusterfs-server
 # rc-update add glusterd
 # service glusterd start
 ## Join the GlusterFS cluster on swarm 1
-# if [ "$hostname" != swarm0 ] ; then
+# if [ "$node" != swarm0 ] ; then
     # gluster peer probe swarm0
 # else
     # gluster volume create appdata-volume replica 4 transport tcp \
