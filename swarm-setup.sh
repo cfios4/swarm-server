@@ -63,4 +63,4 @@ for node in $(docker node ls --filter "role=manager" --format "{{.Hostname}}") ;
                     docker network create -d macvlan --scope swarm --attachable --config-from macvlan4home dns-ip
 done
 # this command will label all managers as having macvlan4home=true, do after the previous
-docker node update --label-add "macvlan4home=true" $(docker node ls --filter "role=manager" --format "{{.ID}}")
+docker node update --label-add "macvlan4home=true" $(docker node ls --filter "role=manager" --format "{{.Hostname}}")
