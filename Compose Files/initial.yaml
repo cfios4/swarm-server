@@ -84,18 +84,19 @@ services:
         traefik.http.services.pihole.loadbalancer.server.port: 80
       placement:
         constraints: 
-          - node.labels.macvlan4home == true # Force swarm0 because this will be the only one with the macvlan setup
+          - node.labels.macvlan4home == true # Force managers because they will only have the macvlan setup
     networks:
       - macvlan4home
     cap_add: # needed if using as DHCP server
       - NET_ADMIN
     environment:
       TZ: ${TZ}
-      FTLCONF_LOCAL_IPV4: 192.168.45.254
-      REV_SERVER_TARGET: 192.168.45.1
-      REV_SERVER: "true"
-      REV_SERVER_CIDR: 192.168.45.0/24
-      REV_SERVER_DOMAIN: lan
+      DHCP_ACTIVE: "true"
+      DHCP_START: ${NETWORK}.100
+      DHCP_END: ${NETWORK}.150
+      DHCP_ROUTER: ${GATEWAY}
+      FTLCONF_LOCAL_IPV4: ${DNS}
+      PIHOLE_DOMAIN: lan
       PIHOLE_DNS_: 127.0.0.1#5335
       WEBPASSWORD: changeme
       WEBTHEME: default-dark 
