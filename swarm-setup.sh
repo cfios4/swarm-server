@@ -11,11 +11,6 @@ export SUBNET=192.168.45.0/255.255.255.0
 export TAILSCALEIP=$(tailscale ip -4)
 export PLEX_CLAIM=$(docker exec $(docker ps -f name=plex --format "{{.ID}}") sh -c 'curl -s "https://plex.tv/api/claim/token?X-Plex-Token=$(grep PlexOnlineToken config/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml | cut -d '\'' '\'' -f 4 | cut -d '\''"'\'' -f 2)" | cut -d '\''"'\'' -f 2')
 
-
-swarm0=$(hostname -I | grep -oE '192\.168\.[0-9]+\.[0-9]+')
-swarm1=
-swarm2=
-swarm3=
 swarm=("swarm0" "swarm1" "swarm2" "swarm3")
 tailscaleip=$(tailscale ip -4)
 
@@ -26,16 +21,6 @@ apk update
 apk add docker
 rc-update add docker boot
 service docker start
-# Create SSH key and copy it to cluster
-ssh-keygen -b 2048 -t rsa -f .ssh/id_rsa -q -N ""
-ssh-copy-id swarm@swarm{1..3}
-# Set IPs to swarms
-cat <<EOF >> /etc/hosts
-$swarm0       swarm0
-$swarm1       swarm1
-$swarm2       swarm2
-$swarm3       swarm3
-EOF
 
 ## Initialize Docker Swarm
 docker swarm init --advertise-addr tailscale0
@@ -57,11 +42,6 @@ apk update
 apk add docker
 rc-update add docker boot
 service docker start
-# Set IPs to swarms
-printf "$swarm0    swarm0
-$swarm1    swarm1
-$swarm2    swarm2
-$swarm3    swarm3" >> /etc/hosts
 
 mkdir -p $CLUSTER_MNT/{media,appdata/{traefik,flame,gitea,nextcloud,postgres,vaultwarden,vscode,plex,radarr,sonarr,sabnzbd}}
 
