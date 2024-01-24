@@ -78,7 +78,7 @@ services:
       replicas: 1
       labels:
         traefik.enable: "true"
-        traefik.http.routers.pihole.rule: Host(`pi.hole`) && ClientIP(`192.168.45.0/24`, `100.64.0.0/10`)
+        traefik.http.routers.pihole.rule: Host(`pi.hole`) && ClientIP(`192.168.45.0/24`)
         traefik.http.routers.pihole.service: pihole
         traefik.http.routers.pihole.entrypoints: internal
         traefik.http.services.pihole.loadbalancer.server.port: 80

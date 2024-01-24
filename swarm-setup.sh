@@ -12,9 +12,9 @@ rc-update add docker boot
 service docker start
 
 ## Initialize Docker Swarm
-docker swarm init --advertise-addr tailscale0
+docker swarm init --advertise-addr wt0
 # Get variables for other nodes
-tailscaleip=$(tailscale ip -4)
+netbirdip=$(netbird status --ipv4)
 manager_token=$(docker swarm join-token manager -q)
 worker_token=$(docker swarm join-token worker -q)
 
@@ -40,10 +40,10 @@ mkdir -p $CLUSTER_MNT/{media,appdata/{traefik,flame,gitea,nextcloud,postgres,vau
 
 if [ "$node" != swarm3 ] ; then
     ## Join the Swarm as a manager if not swarm3
-    docker swarm join --token $manager_token $tailscaleip:2377
+    docker swarm join --token $manager_token $netbirdip:2377
 else
     ## Join the Swarm as a worker if swarm3
-    docker swarm join --token $worker_token $tailscaleip:2377
+    docker swarm join --token $worker_token $netbirdip:2377
 fi
 
 ## Initialize GlusterFS on swarm 1
