@@ -84,14 +84,14 @@ services:
         traefik.http.services.pihole.loadbalancer.server.port: 80
       placement:
         constraints: 
-          - node.labels.macvlan4home == true # Force managers because they will only have the macvlan setup
+          - node.labels.dns == true # Force managers because they will only have the macvlan setup
     networks:
-      - macvlan4home
+      - dns-ip
     cap_add: # needed if using as DHCP server
       - NET_ADMIN
     environment:
       TZ: ${TZ}
-      DHCP_ACTIVE: "true"
+      DHCP_ACTIVE: "false"
       DHCP_START: ${NETWORK}.100
       DHCP_END: ${NETWORK}.150
       DHCP_ROUTER: ${GATEWAY}
@@ -116,5 +116,5 @@ networks:
   overlaynet:
     driver: overlay
     name: overlaynet
-  macvlan4home:
+  dns-ip:
     external: true
