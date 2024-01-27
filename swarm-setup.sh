@@ -49,10 +49,10 @@ sudo gluster volume create media-volume swarm1.netbird.cloud:/mnt/gluster/media 
 sudo gluster volume start appdata-volume
 sudo gluster volume start media-volume
 
-
-### all
+for node in swarm1 swarm2 swarm3 swarm4 ; do
+	ssh swarm@$node.netbird.cloud bash <<SSH
+echo Admin!!1 | sudo -sS
+sudo -s
 sudo mount -a
-
-
-### any
-sudo mkdir -p /appdata/{traefik,flame,gitea,nextcloud,pihole,postgres,vaultwarden,vscode,plex,radarr,sonarr,sabnzbd} /media/{shows,movies}
+SSH
+done
