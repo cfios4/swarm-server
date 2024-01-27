@@ -2,11 +2,10 @@
 name=swarmX
 netbirdkey=xxxxx-xxxxx-xxxxx
 
-sudo mkdir -p /mnt/{.cluster,gluster/{appdata,media}}
+sudo mkdir -p /mnt/{appdata,media} /gluster/{appdata,media}
 sudo addgroup docker
 sudo adduser --home /mnt --shell /bin/bash swarm
 sudo usermod -aG sudo,docker swarm
-sudo chown -R swarm:docker /mnt/{appdata,media,.cluster}
 echo $name | sudo tee /etc/hostname
 curl -fsSL https://get.docker.com | bash
 curl -fsSL https://pkgs.netbird.io/install.sh | bash
@@ -35,18 +34,25 @@ for node in swarm1 swarm2 swarm3 swarm4 ; do
 echo Admin!!1 | sudo -sS
 sudo -s
 
-apt update ; apt install -y glusterfs-server
-systemctl enable glusterd ; systemctl start glusterd
+sudo mkdir -p /{appdata,media} /mnt/gluster/{appdata,media}
 
 sudo mkfs.ext4 /dev/nvme0n1
-sudo mount /dev/nvme0n1 /mnt/.cluster
-echo 'localhost:/appdata-volume /mnt/gluster/appdata glusterfs defaults,_netdev 0 0' | sudo tee -a /etc/fstab
-echo 'localhost:/media-volume /mnt/gluster/media glusterfs defaults,_netdev 0 0' | sudo tee -a /etc/fstab
+echo '/dev/nvme0n1 /mnt/gluster ext4 defaults 0 0' | sudo tee -a /etc/fstab
 sudo mount -a
+echo 'localhost:/appdata-volume /appdata glusterfs defaults,_netdev 0 0' | sudo tee -a /etc/fstab
+echo 'localhost:/media-volume /media glusterfs defaults,_netdev 0 0' | sudo tee -a /etc/fstab
 SSH
 done
 
-sudo gluster volume create appdata-volume replica 4 swarm1.netbird.cloud:/mnt/.cluster/appdata swarm2.netbird.cloud:/mnt/.cluster/appdata swarm3.netbird.cloud:/mnt/.cluster/appdata swarm4.netbird.cloud:/mnt/.cluster/appdata force
-sudo gluster volume create media-volume swarm1.netbird.cloud:/mnt/.cluster/media swarm2.netbird.cloud:/mnt/.cluster/media swarm3.netbird.cloud:/mnt/.cluster/media swarm4.netbird.cloud:/mnt/.cluster/media force
-sudo gluster volume start {appdata,media}-volume
-sudo mkdir -p /mnt/gluster/media/{shows,movies} /mnt/gluster/appdata/{traefik,flame,gitea,nextcloud,pihole,postgres,vaultwarden,vscode,plex,radarr,sonarr,sabnzbd}
+sudo gluster volume create appdata-volume replica 4 swarm1.netbird.cloud:/mnt/gluster/appdata swarm2.netbird.cloud:/mnt/gluster/appdata swarm3.netbird.cloud:/mnt/gluster/appdata swarm4.netbird.cloud:/mnt/gluster/appdata
+sudo gluster volume create media-volume swarm1.netbird.cloud:/mnt/gluster/media swarm2.netbird.cloud:/mnt/gluster/media swarm3.netbird.cloud:/mnt/gluster/media swarm4.netbird.cloud:/mnt/gluster/media
+sudo gluster volume start appdata-volume
+sudo gluster volume start media-volume
+
+
+### all
+sudo mount -a
+
+
+### any
+sudo mkdir -p /appdata/{traefik,flame,gitea,nextcloud,pihole,postgres,vaultwarden,vscode,plex,radarr,sonarr,sabnzbd} /media/{shows,movies}
