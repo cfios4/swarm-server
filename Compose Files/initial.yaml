@@ -53,7 +53,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   flame:
-    image: pawelmalak/flame:latest
+    image: pawelmalak/flame:multiarch
     deploy:
       replicas: 1
       labels:
