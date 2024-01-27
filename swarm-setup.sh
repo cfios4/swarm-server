@@ -1,3 +1,4 @@
+##### system setup
 ### all
 name=swarmX
 netbirdkey=xxxxx-xxxxx-xxxxx
@@ -27,7 +28,6 @@ ssh swarm@swarm4.netbird.cloud docker swarm join --token $worker_token $netbirdi
 
 
 ##### gluster setup
-
 ### leader
 for node in swarm1 swarm2 swarm3 swarm4 ; do
 	ssh swarm@$node.netbird.cloud bash <<SSH
@@ -35,6 +35,8 @@ echo Admin!!1 | sudo -sS
 sudo -s
 
 sudo mkdir -p /{appdata,media} /mnt/gluster/{appdata,media}
+apt update ; apt install -y glusterfs-server
+systemctl enable glusterd ; systemctl start glusterd
 
 sudo mkfs.ext4 /dev/nvme0n1
 echo '/dev/nvme0n1 /mnt/gluster ext4 defaults 0 0' | sudo tee -a /etc/fstab
@@ -55,4 +57,21 @@ echo Admin!!1 | sudo -sS
 sudo -s
 sudo mount -a
 SSH
+done
+
+
+##### docker setup
+### leader
+for node in $(docker node ls --filter "role=manager" --format "{{.Hostname}}") ; do
+    ssh swarm@$node.netbird.cloud bash <<SSH
+echo Admin!!1 | sudo -sS
+sudo -s
+sudo apt update ; sudo apt install ipcalc-ng ; sudo apt remove ipcalc
+docker network create --config-only -o parent=\$(ip link show | grep -Po '^\d+: \K(eth|eno|enp)[^:]+') --subnet \$(echo \$(ipcalc-ng -n \$(ip a | grep -E 'enp|eth|eno' | grep inet | awk '{print \$2}') --no-decorate)/\$(ipcalc-ng -p \$(ip a | grep -E 'enp|eth|eno' | grep inet | awk '{print \$2}') --no-decorate)) --gateway \$(ip route | grep default | awk '{print \$3}') --ip-range=\$(ip a | grep -E 'enp|eth|eno' | grep inet | awk '{print \$2}' | awk -F / '{print \$1}' | awk -F . '{print \$1"."\$2"."\$3}').254/32 macvlan4home
+docker network create -d macvlan --scope swarm --attachable --config-from macvlan4home dns-ip
+SSH
+done
+
+for node in $(docker node ls --filter "role=manager" -q) ; do
+    docker node update --label-rm "macvlan4home" $node
 done
