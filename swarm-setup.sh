@@ -1,72 +1,52 @@
-#!/bin/bash
-###################### Ran from swarm0 ######################
-export CLUSTER_MNT=/mnt/cluster
-swarm=("swarm0" "swarm1" "swarm2" "swarm3")
+### all
+name=swarmX
+netbirdkey=xxxxx-xxxxx-xxxxx
 
-### swarm 0
-## Setup
-# Install and enable Docker
-apk update
-apk add docker
-rc-update add docker boot
-service docker start
+sudo mkdir -p /mnt/{.cluster,gluster/{appdata,media}}
+sudo addgroup docker
+sudo adduser --home /mnt --shell /bin/bash swarm
+sudo usermod -aG sudo,docker swarm
+sudo chown -R swarm:docker /mnt/{appdata,media,.cluster}
+echo $name | sudo tee /etc/hostname
+curl -fsSL https://get.docker.com | bash
+curl -fsSL https://pkgs.netbird.io/install.sh | bash
+netbird up -k $netbirdkey -n $name
+sudo apt update ; sudo apt upgrade -y
 
-## Initialize Docker Swarm
+
+### leader
 docker swarm init --advertise-addr wt0
-# Get variables for other nodes
 netbirdip=$(netbird status --ipv4)
 manager_token=$(docker swarm join-token manager -q)
 worker_token=$(docker swarm join-token worker -q)
 
-# ## Initialize GlusterFS
-# apk add glusterfs glusterfs-server
-# rc-update add glusterd
-# service glusterd start
+for node in swarm2 swarm3 ; do
+	ssh swarm@$node.netbird.cloud docker swarm join --token $manager_token $netbirdip:2377
+done
+ssh swarm@swarm4.netbird.cloud docker swarm join --token $worker_token $netbirdip:2377
 
 
-###################### BEGIN NODE SETUP ######################
-for node in ${swarm[@]} ; do
-    ssh swarm@$node ash <<SSH
-#!/bin/bash
-## Setup
-# Install and enable Docker
-apk update
-apk add docker
-rc-update add docker boot
-service docker start
 
-mkdir -p $CLUSTER_MNT/{media,appdata/{traefik,flame,gitea,nextcloud,postgres,vaultwarden,vscode,plex,radarr,sonarr,sabnzbd}}
+##### gluster setup
 
+### leader
+for node in swarm1 swarm2 swarm3 swarm4 ; do
+	ssh swarm@$node.netbird.cloud bash <<SSH
+echo Admin!!1 | sudo -sS
+sudo -s
 
-if [ "$node" != swarm3 ] ; then
-    ## Join the Swarm as a manager if not swarm3
-    docker swarm join --token $manager_token $netbirdip:2377
-else
-    ## Join the Swarm as a worker if swarm3
-    docker swarm join --token $worker_token $netbirdip:2377
-fi
+apt update ; apt install -y glusterfs-server
+systemctl enable glusterd ; systemctl start glusterd
 
-## Initialize GlusterFS on swarm 1
-# apk add glusterfs glusterfs-server
-# rc-update add glusterd
-# service glusterd start
-## Join the GlusterFS cluster on swarm 1
-# if [ "$node" != swarm0 ] ; then
-    # gluster peer probe swarm0
-# else
-    # gluster volume create appdata-volume replica 4 transport tcp \
-    # swarm0:/mnt/cluster/appdata \
-    # swarm1:/mnt/cluster/appdata \
-    # swarm2:/mnt/cluster/appdata \
-    # swarm3:/mnt/cluster/appdata
-# fi
+sudo mkfs.ext4 /dev/nvme0n1
+sudo mount /dev/nvme0n1 /mnt/.cluster
+echo 'localhost:/appdata-volume /mnt/gluster/appdata glusterfs defaults,_netdev 0 0' | sudo tee -a /etc/fstab
+echo 'localhost:/media-volume /mnt/gluster/media glusterfs defaults,_netdev 0 0' | sudo tee -a /etc/fstab
+sudo mount -a
 SSH
 done
 
-# all managers need to have docker network/s for pihole
-for node in $(docker node ls --filter "role=manager" --format "{{.Hostname}}") ; do
-    ssh swarm@$node docker network create --config-only -o parent=$(ip link show | grep -Po '^\d+: \K(eth|eno|enp)[^:]+') --subnet $(echo $(ipcalc -n $(ip a | grep -E 'enp|eth|eno' | grep inet | awk '{print $2}') --no-decorate)/$(ipcalc -p $(ip a | grep -E 'enp|eth|eno' | grep inet | awk '{print $2}') --no-decorate)) --gateway $(ip route | grep default | awk '{print $3}') --ip-range=$(ip a | grep -E 'enp|eth|eno' | grep inet | awk '{print $2}' | awk -F / '{print $1}' | awk -F . '{print $1"."$2"."$3}').254/32 macvlan4home \
-                    docker network create -d macvlan --scope swarm --attachable --config-from macvlan4home dns-ip
-done
-# this command will label all managers as having macvlan4home=true, do after the previous
-docker node update --label-add "macvlan4home=true" $(docker node ls --filter "role=manager" --format "{{.Hostname}}")
+sudo gluster volume create appdata-volume replica 4 swarm1.netbird.cloud:/mnt/.cluster/appdata swarm2.netbird.cloud:/mnt/.cluster/appdata swarm3.netbird.cloud:/mnt/.cluster/appdata swarm4.netbird.cloud:/mnt/.cluster/appdata force
+sudo gluster volume create media-volume swarm1.netbird.cloud:/mnt/.cluster/media swarm2.netbird.cloud:/mnt/.cluster/media swarm3.netbird.cloud:/mnt/.cluster/media swarm4.netbird.cloud:/mnt/.cluster/media force
+sudo gluster volume start {appdata,media}-volume
+sudo mkdir -p /mnt/gluster/media/{shows,movies} /mnt/gluster/appdata/{traefik,flame,gitea,nextcloud,pihole,postgres,vaultwarden,vscode,plex,radarr,sonarr,sabnzbd}
