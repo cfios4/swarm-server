@@ -4,7 +4,7 @@ version: "3.8"
 services:
 
   plex:
-    image: plexinc/pms-docker:latest
+    image: linuxserver/plex:latest
     deploy:
       replicas: 1
       labels:
@@ -23,7 +23,7 @@ services:
       ALLOWED_NETWORKS: 192.168.45.0/24,100.64.0.0/10,10.0.0.0/8
     volumes:
       - ${APPDATA_MNT}/plex:/config
-      - ${MEDIA_MNT}:/data:ro
+      - ${MEDIA_MNT}:/media:ro
     tmpfs:
       - /transcode
     labels:
