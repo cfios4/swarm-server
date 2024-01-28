@@ -15,15 +15,15 @@ sudo apt update ; sudo apt upgrade -y
 
 
 ### leader
-docker swarm init --advertise-addr wt0
-netbirdip=$(netbird status --ipv4)
+docker swarm init
+swarmip=$(ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
 manager_token=$(docker swarm join-token manager -q)
 worker_token=$(docker swarm join-token worker -q)
 
 for node in swarm2 swarm3 ; do
-	ssh swarm@$node.netbird.cloud docker swarm join --token $manager_token $netbirdip:2377
+	ssh swarm@$node.netbird.cloud docker swarm join --token $manager_token $swarmip:2377
 done
-ssh swarm@swarm4.netbird.cloud docker swarm join --token $worker_token $netbirdip:2377
+ssh swarm@swarm4.netbird.cloud docker swarm join --token $worker_token $swarmip:2377
 
 
 
@@ -73,5 +73,5 @@ SSH
 done
 
 for node in $(docker node ls --filter "role=manager" -q) ; do
-    docker node update --label-rm "macvlan4home" $node
+    docker node update --label-add "dns=true" $node
 done
