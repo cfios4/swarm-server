@@ -6,7 +6,10 @@ services:
   caddy:
     image: lucaslorentz/caddy-docker-proxy
     deploy:
-      mode: global
+      replicas: 3
+      placement:
+        constraints:
+          - node.role == manager
     ports:
       - target: 80
         published: 80
