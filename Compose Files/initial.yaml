@@ -3,66 +3,32 @@ version: "3.8"
 
 services:
 
-  traefik:
-    image: traefik:latest
+  caddy:
+    image: lucaslorentz/caddy-docker-proxy
     deploy:
-      replicas: 3
-      placement:
-        constraints:
-          - node.role == manager
+      mode: global
     ports:
       - target: 80
         published: 80
         mode: host
-      - target: 8080
-        published: 8080
-        mode: host
       - target: 443
         published: 443
         mode: host
-      - target: 65080
-        published: 65080
-        mode: host
     networks:
       - overlaynet
-    command:
-      - --api.insecure=true
-      - --api.dashboard=true
-      - --serversTransport.insecureSkipVerify=true
-      - --providers.docker=true
-      - --providers.docker.watch=true
-      - --providers.docker.swarmMode=true
-      - --providers.docker.network=overlaynet
-      - --providers.docker.exposedByDefault=false
-      # - --providers.docker.defaultRule=Host(`{{ normalize .Name }}.cafio.co`)
-      - --entrypoints.web.address=:80
-      - --entrypoints.web.http.redirections.entryPoint.to=websecure
-      - --entrypoints.web.http.redirections.entryPoint.scheme=https
-      - --entrypoints.websecure.address=:443
-      - --entrypoints.internal.address=:65080
-      - --certificatesresolvers.cf.acme.email=cfios@mf.me
-      - --certificatesresolvers.cf.acme.storage=/letsencrypt/acme.json
-      - --certificatesresolvers.cf.acme.dnschallenge=true
-      - --certificatesresolvers.cf.acme.dnschallenge.provider=cloudflare
-    environment:
-      TZ: ${TZ}
-      CF_API_EMAIL: cfios@outlook.com
-      CF_DNS_API_TOKEN: bD9fV0AK5MUEwj8nFLSnwh0zmhIODxt6-955dIRK
     volumes:
-      - ${APPDATA_MNT}/traefik:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${APPDATA_MNT}/caddy/serve:/srv
+      - ${APPDATA_MNT}/caddy:/data
+      - ${APPDATA_MNT}/caddy:/config
 
   flame:
     image: pawelmalak/flame:multiarch
     deploy:
       replicas: 1
       labels:
-        traefik.enable: "true"
-        traefik.http.routers.flame.rule: Host(`${DOMAIN}`)
-        traefik.http.routers.flame.service: flame
-        traefik.http.routers.flame.entrypoints: websecure
-        traefik.http.services.flame.loadbalancer.server.port: 5005
-        traefik.http.routers.flame.tls.certresolver: cf
+        caddy: cafio.co
+        caddy.reverse_proxy: "{{upstreams 5005}}"
     networks:
       - overlaynet
     environment:
@@ -76,12 +42,6 @@ services:
     image: cbcrowe/pihole-unbound:latest
     deploy:
       replicas: 1
-      labels:
-        traefik.enable: "true"
-        traefik.http.routers.pihole.rule: Host(`pi.hole`) && ClientIP(`192.168.45.0/24`)
-        traefik.http.routers.pihole.service: pihole
-        traefik.http.routers.pihole.entrypoints: internal
-        traefik.http.services.pihole.loadbalancer.server.port: 80
       placement:
         constraints: 
           - node.labels.dns == true # Force managers because they will only have the macvlan setup

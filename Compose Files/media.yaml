@@ -8,12 +8,8 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: "true"
-        traefik.http.routers.plex.rule: Host(`watch.${DOMAIN}`)
-        traefik.http.routers.plex.service: plex
-        traefik.http.routers.plex.entrypoints: websecure
-        traefik.http.routers.plex.tls.certresolver: cf
-        traefik.http.services.plex.loadbalancer.server.port: 32400
+        caddy: watch.cafio.co
+        caddy.reverse_proxy: "{{upstreams 32400}}"
     networks:
       - overlaynet
     environment:
@@ -37,12 +33,8 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: "true"
-        traefik.http.routers.overseerr.rule: Host(`request.${DOMAIN}`)
-        traefik.http.routers.overseerr.service: overseerr
-        traefik.http.routers.overseerr.entrypoints: websecure
-        traefik.http.routers.overseerr.tls.certresolver: cf
-        traefik.http.services.overseerr.loadbalancer.server.port: 5055
+        caddy: request.cafio.co
+        caddy.reverse_proxy: "{{upstreams 5055}}"
     environment:
       LOG_LEVEL: debug
       TZ: ${TZ}
@@ -59,11 +51,8 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: "true"
-        traefik.http.routers.radarr.rule: Host(`${HOSTNAME}`) && PathPrefix(`/radarr`) && ClientIP(`192.168.45.0/24`, `100.64.0.0/10`)
-        traefik.http.routers.radarr.service: radarr
-        traefik.http.routers.radarr.entrypoints: internal
-        traefik.http.services.radarr.loadbalancer.server.port: 7878
+        caddy: cafio.co/radarr
+        caddy.reverse_proxy: "{{upstreams 7878}}"
     networks:
       - overlaynet
     environment:
@@ -85,11 +74,8 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: "true"
-        traefik.http.routers.sonarr.rule: Host(`${HOSTNAME}`) && PathPrefix(`/sonarr`) && ClientIP(`192.168.45.0/24`, `100.64.0.0/10`)
-        traefik.http.routers.sonarr.service: sonarr
-        traefik.http.routers.sonarr.entrypoints: internal
-        traefik.http.services.sonarr.loadbalancer.server.port: 8989
+        caddy: cafio.co/sonarr
+        caddy.reverse_proxy: "{{upstreams 8989}}"
     networks:
       - overlaynet
     environment:
@@ -111,11 +97,8 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: "true"
-        traefik.http.routers.sabnzbd.rule: Host(`${HOSTNAME}`) && PathPrefix(`/sabnzbd`) && ClientIP(`192.168.45.0/24`, `100.64.0.0/10`)
-        traefik.http.routers.sabnzbd.service: sabnzbd
-        traefik.http.routers.sabnzbd.entrypoints: internal
-        traefik.http.services.sabnzbd.loadbalancer.server.port: 8080
+        caddy: cafio.co/sabnzbd
+        caddy.reverse_proxy: "{{upstreams 8080}}"
     networks:
       - overlaynet
     environment:

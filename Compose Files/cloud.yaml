@@ -8,12 +8,8 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: "true"
-        traefik.http.routers.pairdrop.rule: Host(`drop.${DOMAIN}`)
-        traefik.http.routers.pairdrop.service: pairdrop
-        traefik.http.routers.pairdrop.entrypoints: websecure
-        traefik.http.routers.pairdrop.tls.certresolver: cf
-        traefik.http.services.pairdrop.loadbalancer.server.port: 3000
+        caddy: drop.cafio.co
+        caddy.reverse_proxy: "{{upstreams 3000}}"
     networks:
       - overlaynet
     environment:
@@ -31,12 +27,8 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: "true"
-        traefik.http.routers.cloud.rule: Host(`cloud.${DOMAIN}`)
-        traefik.http.routers.cloud.service: cloud
-        traefik.http.routers.cloud.entrypoints: websecure
-        traefik.http.routers.cloud.tls.certresolver: cf
-        traefik.http.services.cloud.loadbalancer.server.port: 80
+        caddy: cloud.cafio.co
+        caddy.reverse_proxy: "{{upstreams 80}}"
     networks:
       - overlaynet
     environment:
@@ -58,12 +50,8 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: "true"
-        traefik.http.routers.bin.rule: Host(`bin.${DOMAIN}`)
-        traefik.http.routers.bin.service: bin
-        traefik.http.routers.bin.entrypoints: websecure
-        traefik.http.routers.bin.tls.certresolver: cf
-        traefik.http.services.bin.loadbalancer.server.port: 8080
+        caddy: bin.cafio.co
+        caddy.reverse_proxy: "{{upstreams 8080}}"
     networks:
       - overlaynet
     environment:
@@ -98,12 +86,8 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: "true"
-        traefik.http.routers.code.rule: Host(`code.${DOMAIN}`)
-        traefik.http.routers.code.service: code
-        traefik.http.routers.code.entrypoints: websecure
-        traefik.http.routers.code.tls.certresolver: cf
-        traefik.http.services.code.loadbalancer.server.port: 3000
+        caddy: code.cafio.co
+        caddy.reverse_proxy: "{{upstreams 3000}}"
     networks:
       - overlaynet
     environment:
@@ -121,12 +105,8 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: "true"
-        traefik.http.routers.vault.rule: Host(`vault.${DOMAIN}`)
-        traefik.http.routers.vault.service: vault
-        traefik.http.routers.vault.entrypoints: websecure
-        traefik.http.routers.vault.tls.certresolver: cf
-        traefik.http.services.vault.loadbalancer.server.port: 80
+        caddy: vault.cafio.co
+        caddy.reverse_proxy: "{{upstreams 80}}"
     networks:
       - overlaynet
     environment:
@@ -154,12 +134,8 @@ services:
     deploy:
       replicas: 1
       labels:
-        traefik.enable: "true"
-        traefik.http.routers.git.rule: Host(`git.${DOMAIN}`)
-        traefik.http.routers.git.service: git
-        traefik.http.routers.git.entrypoints: websecure
-        traefik.http.routers.git.tls.certresolver: cf
-        traefik.http.services.git.loadbalancer.server.port: 3000
+        caddy: git.cafio.co
+        caddy.reverse_proxy: "{{upstreams 3000}}"
     networks:
       - overlaynet
     environment:
