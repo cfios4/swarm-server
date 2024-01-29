@@ -33,10 +33,9 @@ services:
     deploy:
       replicas: 1
       labels:
-        caddy: request.cafio.co
+        caddy: search.cafio.co
         caddy.reverse_proxy: "{{upstreams 5055}}"
     environment:
-      LOG_LEVEL: debug
       TZ: ${TZ}
     volumes:
       - ${APPDATA_MNT}/overseerr:/app/config
@@ -51,8 +50,8 @@ services:
     deploy:
       replicas: 1
       labels:
-        caddy: cafio.co/radarr
-        caddy.reverse_proxy: "{{upstreams 7878}}"
+        caddy: cafio.co
+        caddy.reverse_proxy: /radarr* "{{upstreams 7878}}"
     networks:
       - overlaynet
     environment:
@@ -74,8 +73,8 @@ services:
     deploy:
       replicas: 1
       labels:
-        caddy: cafio.co/sonarr
-        caddy.reverse_proxy: "{{upstreams 8989}}"
+        caddy: cafio.co
+        caddy.reverse_proxy: /sonarr* "{{upstreams 8989}}"
     networks:
       - overlaynet
     environment:
@@ -97,8 +96,8 @@ services:
     deploy:
       replicas: 1
       labels:
-        caddy: cafio.co/sabnzbd
-        caddy.reverse_proxy: "{{upstreams 8080}}"
+        caddy: cafio.co
+        caddy.reverse_proxy: /sabnzbd* "{{upstreams 8080}}"
     networks:
       - overlaynet
     environment:
