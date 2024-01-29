@@ -34,7 +34,7 @@ services:
     environment:
       TZ: ${TZ}
       NEXTCLOUD_ADMIN_USER: casey
-      NEXTCLOUD_ADMIN_PASSWORD: changeme
+      NEXTCLOUD_ADMIN_PASSWORD: ${PASSWORD}
       NEXTCLOUD_TRUSTED_DOMAINS: cloud.${DOMAIN}
       SQLITE_DATABASE: nextcloud
     volumes:
@@ -57,7 +57,7 @@ services:
     environment:
       TZ: ${TZ}
       MICROBIN_ADMIN_USERNAME: admin
-      MICROBIN_ADMIN_PASSWORD: changeme
+      MICROBIN_ADMIN_PASSWORD: ${PASSWORD}
       MICROBIN_EDITABLE: 'true'
       MICROBIN_HIGHLIGHTSYNTAX: 'true'
       MICROBIN_BIND: '0.0.0.0'

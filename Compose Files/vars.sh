@@ -2,6 +2,7 @@
 export APPDATA_MNT=/appdata
 export MEDIA_MNT=/media
 export DOMAIN=cafio.co
+export PASSWORD=changeme
 export TZ=America/New_York
 export NETBIRDIP=$(netbird status --ipv4)
 export PLEX_CLAIM=$(docker exec $(docker ps -f name=plex --format "{{.ID}}") sh -c 'curl -s "https://plex.tv/api/claim/token?X-Plex-Token=$(grep PlexOnlineToken config/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml | cut -d '\'' '\'' -f 4 | cut -d '\''"'\'' -f 2)" | cut -d '\''"'\'' -f 2')

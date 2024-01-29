@@ -36,7 +36,7 @@ services:
       - overlaynet
     environment:
       TZ: ${TZ}
-      PASSWORD: changeme
+      PASSWORD: ${PASSWORD}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${APPDATA_MNT}/flame:/app/data
@@ -61,7 +61,7 @@ services:
       FTLCONF_LOCAL_IPV4: ${DNS}
       PIHOLE_DOMAIN: lan
       PIHOLE_DNS_: 127.0.0.1#5335
-      WEBPASSWORD: changeme
+      WEBPASSWORD: ${PASSWORD}
       WEBTHEME: default-dark 
       DNSSEC: "true"
       DNSMASQ_LISTENING: local
