@@ -6,7 +6,10 @@ services:
   caddy:
     image: lucaslorentz/caddy-docker-proxy
     deploy:
-      mode: global
+      replicas: 3
+      placement:
+        constraints:
+          - node.role == manager
     ports:
       - target: 80
         published: 80
@@ -18,9 +21,8 @@ services:
       - overlaynet
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${APPDATA_MNT}/caddy/serve:/srv
-      - ${APPDATA_MNT}/caddy:/data
-      - ${APPDATA_MNT}/caddy:/config
+      - ${APPDATA_MNT}:/data
+      - ${APPDATA_MNT}:/config
 
   flame:
     image: pawelmalak/flame:multiarch
@@ -29,6 +31,7 @@ services:
       labels:
         caddy: cafio.co
         caddy.reverse_proxy: "{{upstreams 5005}}"
+        #caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
     networks:
       - overlaynet
     environment:
