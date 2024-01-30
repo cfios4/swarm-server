@@ -9,7 +9,10 @@ services:
       replicas: 1
       labels:
         caddy: watch.cafio.co
-        caddy.reverse_proxy: "{{upstreams 32400}}"
+        caddy.reverse_proxy: "{{upstreams https 32400}}"
+        caddy.reverse_proxy.transport: http
+        caddy.reverse_proxy.transport.tls:
+        caddy.reverse_proxy.transport.tls_insecure_skip_verify:
     networks:
       - overlaynet
     environment:
