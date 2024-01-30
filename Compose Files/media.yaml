@@ -28,23 +28,6 @@ services:
       - flame.icon=plex
       - flame.url=https://watch.${DOMAIN}/
 
-  overseerr:
-    image: sctx/overseerr:latest
-    deploy:
-      replicas: 1
-      labels:
-        caddy: search.cafio.co
-        caddy.reverse_proxy: "{{upstreams 5055}}"
-    environment:
-      TZ: ${TZ}
-    volumes:
-      - ${APPDATA_MNT}/overseerr:/app/config
-    labels:
-      - flame.type=app
-      - flame.name=Overseerr
-      - flame.icon=movie-search
-      - flame.url=https://search.${DOMAIN}/
-
   radarr:
     image: hotio/radarr:latest
     deploy:
