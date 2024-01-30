@@ -1,6 +1,7 @@
 #!/bin/bash
 export APPDATA_MNT=/appdata
 export MEDIA_MNT=/media
+export PASSWORD=Admin!!1
 export DOMAIN=cafio.co
 export TZ=America/New_York
 export NETBIRDIP=$(netbird status --ipv4)

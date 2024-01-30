@@ -36,7 +36,7 @@ services:
       - overlaynet
     environment:
       TZ: ${TZ}
-      PASSWORD: changeme
+      PASSWORD: ${PASSWORD}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${APPDATA_MNT}/flame:/app/data
