@@ -41,8 +41,8 @@ systemctl enable glusterd ; systemctl start glusterd
 sudo mkfs.ext4 /dev/nvme0n1
 echo '/dev/nvme0n1 /mnt/gluster ext4 defaults 0 0' | sudo tee -a /etc/fstab
 sudo mount -a
-echo 'localhost:/appdata-volume /appdata glusterfs defaults,_netdev 0 0' | sudo tee -a /etc/fstab
-echo 'localhost:/media-volume /media glusterfs defaults,_netdev 0 0' | sudo tee -a /etc/fstab
+echo 'localhost:/appdata-volume /appdata glusterfs defaults,_netdev,noauto,x-systemd.automount 0 0' | sudo tee -a /etc/fstab
+echo 'localhost:/media-volume /media glusterfs defaults,_netdev,noauto,x-systemd.automount 0 0' | sudo tee -a /etc/fstab
 SSH
 done
 
@@ -58,6 +58,8 @@ sudo -s
 sudo mount -a
 SSH
 done
+
+sudo mkdir -p /appdata/{flame,gitea,nextcloud,overseerr,pihole,vaultwarden,vscode,plex,radarr,sonarr,sabnzbd} /media/{shows,movies}
 
 
 ##### docker setup
