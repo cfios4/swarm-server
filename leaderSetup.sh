@@ -75,3 +75,30 @@ for node in $(docker node ls --filter "role=manager" -q) ; do
     echo "Adding DNS labe for PiHole on $node..."
     docker node update --label-add "dns=true" $node
 done
+
+
+########## keepalived setup
+### LEADER ONLY
+sudo apt update ; sudo apt install -y keepalived
+sudo tee /etc/keepalived/keepalived.conf <<EOF
+global_defs {  
+  router_id DOCKER_INGRESS  
+}  
+
+vrrp_instance VI_1 {
+  state MASTER
+  interface eth0
+  virtual_router_id 51
+  priority 100
+  advert_int 1
+  authentication {
+    auth_type PASS
+    auth_pass changeme
+  }
+  virtual_ipaddress {
+    192.168.45.40
+  }
+}
+EOF
+sudo systemctl start keepalived  
+sudo systemctl enable keepalived
