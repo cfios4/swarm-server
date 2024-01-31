@@ -84,6 +84,8 @@ services:
       labels:
         caddy: cafio.co
         caddy.reverse_proxy: /sabnzbd* "{{upstreams 8080}}"
+        caddy.basicauth:
+        caddy.basicauth.swarm: $2a$12$8V1u/O/1LuzQDcV56hxX0ekowne/RKeBi6jlT1vLNo0DkdQbFrnKm
     networks:
       - overlaynet
     environment:
