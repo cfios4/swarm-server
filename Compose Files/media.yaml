@@ -44,6 +44,7 @@ services:
       TZ: ${TZ}
       PUID: 1001
       PGID: 1002
+      UMASK: 002
     depends_on:
       - sabnzbd
     volumes:
@@ -69,6 +70,7 @@ services:
       TZ: ${TZ}
       PUID: 1001
       PGID: 1002
+      UMASK: 002
     depends_on:
       - sabnzbd
     volumes:
@@ -96,6 +98,7 @@ services:
       TZ: ${TZ}
       PUID: 1001
       PGID: 1002
+      UMASK: 002
     volumes:
       - ${APPDATA_MNT}/sabnzbd:/config
       - ${MEDIA_MNT}:/data
