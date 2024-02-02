@@ -29,7 +29,7 @@ for node in ${cluster[@]} ; do
 echo Admin!!1 | sudo -sS
 sudo -s
 
-sudo mkdir -p /{appdata,media} /mnt/gluster/{appdata,media}
+mkdir -p ~/{appdata,media} ~/.gluster/{appdata,media}
 apt update ; apt install -y glusterfs-server
 systemctl enable glusterd ; systemctl start glusterd
 echo "Formatting external storage on $node..."
@@ -37,13 +37,13 @@ sudo mkfs.ext4 /dev/nvme0n1
 echo '/dev/nvme0n1 /mnt/gluster ext4 defaults 0 0' | sudo tee -a /etc/fstab
 echo "Mounting external storage on $node..."
 sudo mount -a
-echo 'localhost:/appdata-volume /appdata glusterfs defaults,_netdev,noauto,x-systemd.automount 0 0' | sudo tee -a /etc/fstab
-echo 'localhost:/media-volume /media glusterfs defaults,_netdev,noauto,x-systemd.automount 0 0' | sudo tee -a /etc/fstab
+echo 'localhost:/appdata-volume ~/appdata glusterfs defaults,_netdev,noauto,x-systemd.automount 0 0' | sudo tee -a /etc/fstab
+echo 'localhost:/media-volume ~/media glusterfs defaults,_netdev,noauto,x-systemd.automount 0 0' | sudo tee -a /etc/fstab
 SSH
 done
 
-sudo gluster volume create appdata-volume replica 4 swarm1.netbird.cloud:/mnt/gluster/appdata swarm2.netbird.cloud:/mnt/gluster/appdata swarm3.netbird.cloud:/mnt/gluster/appdata swarm4.netbird.cloud:/mnt/gluster/appdata
-sudo gluster volume create media-volume swarm1.netbird.cloud:/mnt/gluster/media swarm2.netbird.cloud:/mnt/gluster/media swarm3.netbird.cloud:/mnt/gluster/media swarm4.netbird.cloud:/mnt/gluster/media
+sudo gluster volume create appdata-volume replica 4 swarm1.netbird.cloud:~/.gluster/appdata swarm2.netbird.cloud:~/.gluster/appdata swarm3.netbird.cloud:~/.gluster/appdata swarm4.netbird.cloud:~/.gluster/appdata
+sudo gluster volume create media-volume swarm1.netbird.cloud:~/.gluster/media swarm2.netbird.cloud:~/.gluster/media swarm3.netbird.cloud:~/.gluster/media swarm4.netbird.cloud:~/.gluster/media
 sudo gluster volume start appdata-volume
 sudo gluster volume start media-volume
 
@@ -56,7 +56,7 @@ sudo mount -a
 SSH
 done
 
-sudo mkdir -p /appdata/{flame,gitea,nextcloud,overseerr,pihole,vaultwarden,vscode,plex,radarr,sonarr,sabnzbd} /media/{shows,movies}
+mkdir -p ~/appdata/{flame,gitea,nextcloud,overseerr,pihole,vaultwarden,vscode,plex,radarr,sonarr,sabnzbd} ~/media/{shows,movies}
 
 
 ########## docker setup
