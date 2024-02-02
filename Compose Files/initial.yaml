@@ -30,8 +30,7 @@ services:
       replicas: 1
       labels:
         caddy: cafio.co
-        caddy.reverse_proxy: "{{upstreams 5005}}"
-        #caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
+        caddy.reverse_proxy: {{upstreams 5005}}
     networks:
       - overlaynet
     environment:
