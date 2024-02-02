@@ -42,6 +42,8 @@ services:
       - overlaynet
     environment:
       TZ: ${TZ}
+      PUID: 1001
+      PGID: 1002
     depends_on:
       - sabnzbd
     volumes:
@@ -65,6 +67,8 @@ services:
       - overlaynet
     environment:
       TZ: ${TZ}
+      PUID: 1001
+      PGID: 1002
     depends_on:
       - sabnzbd
     volumes:
@@ -90,6 +94,8 @@ services:
       - overlaynet
     environment:
       TZ: ${TZ}
+      PUID: 1001
+      PGID: 1002
     volumes:
       - ${APPDATA_MNT}/sabnzbd:/config
       - ${MEDIA_MNT}:/data
