@@ -79,6 +79,7 @@ for node in $(docker node ls --filter "role=manager" --format "{{.Hostname}}") ;
 echo Admin!!1 | sudo -sS
 sudo -s
 sudo apt update ; sudo apt install ipcalc-ng ; sudo apt remove ipcalc
+echo "Creating Docker network for DNS on $node..."
 docker network create --config-only -o parent=\$(ip link show | grep -Po '^\d+: \K(eth|eno|enp)[^:]+') --subnet \$(echo \$(ipcalc-ng -n \$(ip a | grep -E 'enp|eth|eno' | grep inet | awk '{print \$2}') --no-decorate)/\$(ipcalc-ng -p \$(ip a | grep -E 'enp|eth|eno' | grep inet | awk '{print \$2}') --no-decorate)) --gateway \$(ip route | grep default | awk '{print \$3}') --ip-range=\$(ip a | grep -E 'enp|eth|eno' | grep inet | awk '{print \$2}' | awk -F / '{print \$1}' | awk -F . '{print \$1"."\$2"."\$3}').254/32 macvlan4home
 docker network create -d macvlan --scope swarm --attachable --config-from macvlan4home dns-ip
 SSH
