@@ -1,5 +1,4 @@
 ##### system setup
-### ALL NODES (done manually, copy-paste)
 read -p "Node name (i.e. swarm1): " nodename
 read -p "Netbird authkey: " netbirdkey
 
