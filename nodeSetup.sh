@@ -2,7 +2,7 @@
 read -p "Node name (i.e. swarm1): " nodename
 read -p "Netbird authkey: " netbirdkey
 
-sudo mkdir -p /{appdata,media} /mnt/gluster/{appdata,media}
+mkdir -p ~/{appdata,media} ~/.gluster/{appdata,media}
 sudo adduser --home /home/swarm --shell /bin/bash swarm
 echo $nodename | sudo tee /etc/hostname
 curl -fsSL https://get.docker.com | bash
