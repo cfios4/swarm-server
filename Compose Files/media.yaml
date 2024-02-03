@@ -22,7 +22,7 @@ services:
       ALLOWED_NETWORKS: 192.168.45.0/24,100.64.0.0/10,10.0.0.0/8
     volumes:
       - ${APPDATA_MNT}/plex:/config
-      - ${MEDIA_MNT}:/media:ro
+      - ${MEDIA_MNT}:/data/media:ro
     tmpfs:
       - /transcode
     labels:
@@ -101,7 +101,7 @@ services:
       UMASK: 002
     volumes:
       - ${APPDATA_MNT}/sabnzbd:/config
-      - ${MEDIA_MNT}:/data
+      - ${MEDIA_MNT}/usenet:/data/usenet
     labels:
       - flame.type=app
       - flame.name=Sabnzbd
