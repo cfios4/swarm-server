@@ -69,7 +69,7 @@ sudo mount -a
 SSH
 done
 
-mkdir -p ~/appdata/{flame,gitea,nextcloud,overseerr,pihole,vaultwarden,vscode,plex,radarr,sonarr,sabnzbd} ~/media/{shows,movies}
+mkdir -p ~/appdata/{flame,gitea,nextcloud,pihole,vaultwarden,vscode,plex,radarr,sonarr,sabnzbd} ~/media/{shows,movies,usenet}
 
 
 ########## docker setup
