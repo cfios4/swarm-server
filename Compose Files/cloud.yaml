@@ -9,7 +9,7 @@ services:
       replicas: 1
       labels:
         caddy: drop.cafio.co
-        caddy.reverse_proxy: {{upstreams 3000}}
+        caddy.reverse_proxy: "{{upstreams 3000}}"
     networks:
       - overlaynet
     environment:
@@ -28,7 +28,7 @@ services:
       replicas: 1
       labels:
         caddy: cloud.cafio.co
-        caddy.reverse_proxy: {{upstreams 80}}
+        caddy.reverse_proxy: "{{upstreams 80}}"
     networks:
       - overlaynet
     environment:
@@ -51,7 +51,7 @@ services:
       replicas: 1
       labels:
         caddy: bin.cafio.co
-        caddy.reverse_proxy: {{upstreams 8080}}
+        caddy.reverse_proxy: "{{upstreams 8080}}"
     networks:
       - overlaynet
     environment:
@@ -87,7 +87,7 @@ services:
       replicas: 1
       labels:
         caddy: code.cafio.co
-        caddy.reverse_proxy: {{upstreams 3000}}
+        caddy.reverse_proxy: "{{upstreams 3000}}"
         caddy.basicauth.swarm: $$2a$$12$$8V1u/O/1LuzQDcV56hxX0ekowne/RKeBi6jlT1vLNo0DkdQbFrnKm
     networks:
       - overlaynet
@@ -107,7 +107,7 @@ services:
       replicas: 1
       labels:
         caddy: vault.cafio.co
-        caddy.reverse_proxy: {{upstreams 80}}
+        caddy.reverse_proxy: "{{upstreams 80}}"
     networks:
       - overlaynet
     environment:
@@ -136,7 +136,7 @@ services:
       replicas: 1
       labels:
         caddy: git.cafio.co
-        caddy.reverse_proxy: {{upstreams 3000}}
+        caddy.reverse_proxy: "{{upstreams 3000}}"
     networks:
       - overlaynet
     environment:

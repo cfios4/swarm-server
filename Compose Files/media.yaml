@@ -9,7 +9,7 @@ services:
       replicas: 1
       labels:
         caddy: watch.cafio.co
-        caddy.reverse_proxy: {{upstreams https 32400}}
+        caddy.reverse_proxy: "{{upstreams https 32400}}"
         caddy.reverse_proxy.transport: http
         caddy.reverse_proxy.transport.tls:
         caddy.reverse_proxy.transport.tls_insecure_skip_verify:
@@ -37,7 +37,7 @@ services:
       replicas: 1
       labels:
         caddy: cafio.co
-        caddy.reverse_proxy: /radarr* {{upstreams 7878}}
+        caddy.reverse_proxy: /radarr* "{{upstreams 7878}}"
     networks:
       - overlaynet
     environment:
@@ -63,7 +63,7 @@ services:
       replicas: 1
       labels:
         caddy: cafio.co
-        caddy.reverse_proxy: /sonarr* {{upstreams 8989}}
+        caddy.reverse_proxy: /sonarr* "{{upstreams 8989}}"
     networks:
       - overlaynet
     environment:
@@ -89,7 +89,7 @@ services:
       replicas: 1
       labels:
         caddy: cafio.co
-        caddy.reverse_proxy: /sabnzbd* {{upstreams 8080}}
+        caddy.reverse_proxy: /sabnzbd* "{{upstreams 8080}}"
         caddy.basicauth: /sabnzbd*
         caddy.basicauth.swarm: $$2a$$12$$8V1u/O/1LuzQDcV56hxX0ekowne/RKeBi6jlT1vLNo0DkdQbFrnKm
     networks:
