@@ -15,8 +15,6 @@ services:
         caddy.reverse_proxy.transport.tls_insecure_skip_verify:
     networks:
       - overlaynet
-    env_file:
-      - .env
     environment:
       TZ: ${TZ}
       PLEX_CLAIM: ${PLEX_CLAIM} #https://plex.tv/claim
@@ -42,8 +40,6 @@ services:
         caddy.reverse_proxy: /radarr* "{{upstreams 7878}}"
     networks:
       - overlaynet
-    env_file:
-      - .env
     environment:
       TZ: ${TZ}
       PUID: 1001
@@ -70,8 +66,6 @@ services:
         caddy.reverse_proxy: /sonarr* "{{upstreams 8989}}"
     networks:
       - overlaynet
-    env_file:
-      - .env
     environment:
       TZ: ${TZ}
       PUID: 1001
@@ -100,8 +94,6 @@ services:
         caddy.basicauth.swarm: $$2a$$12$$8V1u/O/1LuzQDcV56hxX0ekowne/RKeBi6jlT1vLNo0DkdQbFrnKm
     networks:
       - overlaynet
-    env_file:
-      - .env
     environment:
       TZ: ${TZ}
       PUID: 1001

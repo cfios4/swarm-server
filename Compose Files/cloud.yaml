@@ -12,8 +12,8 @@ services:
         caddy.reverse_proxy: "{{upstreams 3000}}"
     networks:
       - overlaynet
-    env_file:
-      - .env
+    environment:
+      TZ: ${TZ}
     tmpfs:
       - /config
     labels:
@@ -31,8 +31,8 @@ services:
         caddy.reverse_proxy: "{{upstreams 80}}"
     networks:
       - overlaynet
-    env_file:
-      - .env
+    environment:
+      TZ: ${TZ}
       NEXTCLOUD_ADMIN_USER: casey
       NEXTCLOUD_ADMIN_PASSWORD: ${PASSWORD}
       NEXTCLOUD_TRUSTED_DOMAINS: cloud.${DOMAIN}
@@ -54,9 +54,8 @@ services:
         caddy.reverse_proxy: "{{upstreams 8080}}"
     networks:
       - overlaynet
-    env_file:
-      - .env
     environment:
+      TZ: ${TZ}
       MICROBIN_ADMIN_USERNAME: admin
       MICROBIN_ADMIN_PASSWORD: ${PASSWORD}
       MICROBIN_EDITABLE: 'true'
@@ -92,8 +91,8 @@ services:
         caddy.basicauth.swarm: $$2a$$12$$8V1u/O/1LuzQDcV56hxX0ekowne/RKeBi6jlT1vLNo0DkdQbFrnKm
     networks:
       - overlaynet
-    env_file:
-      - .env
+    environment:
+      TZ: ${TZ}
     volumes:
       - ${APPDATA_MNT}/vscode:/config
     labels:
@@ -111,9 +110,8 @@ services:
         caddy.reverse_proxy: "{{upstreams 80}}"
     networks:
       - overlaynet
-    env_file:
-      - .env
     environment:
+      TZ: ${TZ}
       DOMAIN: https://vault.${DOMAIN}/
       SENDS_ALLOWED: 'true'
       EMERGENCY_ACCESS_ALLOWED: 'true'
@@ -141,9 +139,8 @@ services:
         caddy.reverse_proxy: "{{upstreams 3000}}"
     networks:
       - overlaynet
-    env_file:
-      - .env
     environment:
+      TZ: ${TZ}
       PROTOCOL: https
       DOMAIN: git.${DOMAIN}
       HTTP_PORT: '3000'
