@@ -33,6 +33,8 @@ services:
         caddy.reverse_proxy: "{{upstreams 5005}}"
     networks:
       - overlaynet
+    env_file:
+      - .env
     environment:
       TZ: ${TZ}
       PASSWORD: ${PASSWORD}
@@ -51,6 +53,8 @@ services:
       - dns-ip
     cap_add: # needed if using as DHCP server
       - NET_ADMIN
+    env_file:
+      - .env
     environment:
       TZ: ${TZ}
       DHCP_ACTIVE: "false"
