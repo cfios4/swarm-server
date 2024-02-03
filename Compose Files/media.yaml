@@ -16,20 +16,20 @@ services:
     networks:
       - overlaynet
     environment:
-      TZ: ${TZ}
-      PLEX_CLAIM: ${PLEX_CLAIM} #https://plex.tv/claim
-      ADVERTISE_IP: https://${HOSTNAME}.lan:32400,https://${NETBIRDIP}:32400,https://watch.${DOMAIN}:443
+      TZ: $TZ}
+      PLEX_CLAIM: $PLEX_CLAIM} #https://plex.tv/claim
+      ADVERTISE_IP: https://swarm.lan:32400,https://$NETBIRDIP:32400,https://watch.$DOMAIN:443
       ALLOWED_NETWORKS: 192.168.45.0/24,100.64.0.0/10,10.0.0.0/8
     volumes:
-      - ${APPDATA_MNT}/plex:/config
-      - ${MEDIA_MNT}:/data/media:ro
+      - $APPDATA_MNT/plex:/config
+      - $MEDIA_MNT:/data/media:ro
     tmpfs:
       - /transcode
     labels:
       - flame.type=app
       - flame.name=Plex
       - flame.icon=plex
-      - flame.url=https://watch.${DOMAIN}/
+      - flame.url=https://watch.$DOMAIN/
 
   radarr:
     image: hotio/radarr:latest
@@ -41,20 +41,20 @@ services:
     networks:
       - overlaynet
     environment:
-      TZ: ${TZ}
+      TZ: $TZ
       PUID: 1001
       PGID: 1002
       UMASK: 002
     depends_on:
       - sabnzbd
     volumes:
-      - ${APPDATA_MNT}/radarr:/config
-      - ${MEDIA_MNT}:/data
+      - $APPDATA_MNT/radarr:/config
+      - $MEDIA_MNT:/data
     labels:
       - flame.type=app
       - flame.name=Radarr
       - flame.icon=movie-open
-      - flame.url=https://${DOMAIN}/radarr/
+      - flame.url=https://$DOMAIN/radarr/
       - flame.visibility=hidden
 
   sonarr:
@@ -67,20 +67,20 @@ services:
     networks:
       - overlaynet
     environment:
-      TZ: ${TZ}
+      TZ: $TZ
       PUID: 1001
       PGID: 1002
       UMASK: 002
     depends_on:
       - sabnzbd
     volumes:
-      - ${APPDATA_MNT}/sonarr:/config
-      - ${MEDIA_MNT}:/data
+      - $APPDATA_MNT/sonarr:/config
+      - $MEDIA_MNT:/data
     labels:
       - flame.type=app
       - flame.name=Sonarr
       - flame.icon=youtube-tv
-      - flame.url=https://${DOMAIN}/sonarr/
+      - flame.url=https://$DOMAIN/sonarr/
       - flame.visibility=hidden
 
   sabnzbd:
@@ -95,18 +95,18 @@ services:
     networks:
       - overlaynet
     environment:
-      TZ: ${TZ}
+      TZ: $TZ
       PUID: 1001
       PGID: 1002
       UMASK: 002
     volumes:
-      - ${APPDATA_MNT}/sabnzbd:/config
-      - ${MEDIA_MNT}/usenet:/data/usenet
+      - $APPDATA_MNT/sabnzbd:/config
+      - $MEDIA_MNT/usenet:/data/usenet
     labels:
       - flame.type=app
       - flame.name=Sabnzbd
       - flame.icon=cloud-download
-      - flame.url=https://${DOMAIN}/sabnzbd/
+      - flame.url=https://$DOMAIN/sabnzbd/
       - flame.visibility=hidden
 
 networks:
