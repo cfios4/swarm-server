@@ -1,6 +1,6 @@
 #!/bin/sh
-APPDATA_MNT=./.appdata
-MEDIA_MNT=/mnt/media
+APPDATA_MNT=~/appdata
+MEDIA_MNT=~/media
 DOMAIN=cafio.co
 PASSWORD=CHANGEME
 TZ=America/New_York
