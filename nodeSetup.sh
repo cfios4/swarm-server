@@ -15,7 +15,7 @@ sudo reboot
 ########## keepalived setup
 ### ALL NON-LEADER ONLY
 sudo apt update ; sudo apt install -y keepalived
-PRIORITY=100
+read -p "Priority of server for VRRP (decrement by 10 staring at 90): " PRIOLEVEL
 sudo tee /etc/keepalived/keepalived.conf <<EOF
 global_defs {  
   router_id DOCKER_INGRESS  
@@ -25,7 +25,7 @@ vrrp_instance VI_1 {
   state BACKUP
   interface eth0
   virtual_router_id 51
-  priority $((PRIORITY -= 10))
+  priority $PRIOLEVEL
   advert_int 1
   authentication {
     auth_type PASS
