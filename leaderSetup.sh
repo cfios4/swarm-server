@@ -2,7 +2,6 @@
 read -p "Node name (i.e. swarm1): " nodename
 read -p "Netbird authkey: " netbirdkey
 
-sudo mkdir -p /{appdata,media} /mnt/gluster/{appdata,media}
 sudo adduser --home /home/swarm --shell /bin/bash swarm
 echo $nodename | sudo tee /etc/hostname
 curl -fsSL https://get.docker.com | bash
@@ -29,34 +28,41 @@ for node in ${cluster[@]} ; do
     ssh-copy-id -i "$ssh_key.pub" "$node"
 done
 
-for node in ${cluster[@]:1:3} ; do
+for node in ${cluster[@]:1:2} ; do
 	ssh swarm@$node.netbird.cloud docker swarm join --token $manager_token $swarmip:2377
 done
-ssh swarm@swarm4.netbird.cloud docker swarm join --token $worker_token $swarmip:2377
+for node in ${cluster[@]:3} ; do
+	ssh swarm@swarm4.netbird.cloud docker swarm join --token $worker_token $swarmip:2377
+done
 
 
 ########## gluster setup
 ### LEADER ONLY
 for node in ${cluster[@]} ; do
-	ssh swarm@$node.netbird.cloud bash <<SSH
+	ssh swarm@$node.netbird.cloud <<SSH
 echo Admin!!1 | sudo -sS
 sudo -s
+mkdir -vp /mnt/gluster{/appdata,/media,/bricks}
 
-mkdir -p ~/{appdata,media} ~/.gluster/{appdata,media}
-apt update ; apt install -y glusterfs-server
-systemctl enable glusterd ; systemctl start glusterd
+# apt update ; apt install -y glusterfs-server
+# systemctl enable glusterd ; systemctl start glusterd
 echo "Formatting external storage on $node..."
 sudo mkfs.ext4 /dev/nvme0n1
-echo '/dev/nvme0n1 /mnt/gluster ext4 defaults 0 0' | sudo tee -a /etc/fstab
+echo '/dev/nvme0n1 /mnt/gluster/bricks ext4 defaults 0 0' | sudo tee -a /etc/fstab
 echo "Mounting external storage on $node..."
+mkdir -p /mnt/gluster/bricks/{appdata,media}
 sudo mount -a
-echo 'localhost:/appdata-volume ~/appdata glusterfs defaults,_netdev,noauto,x-systemd.automount 0 0' | sudo tee -a /etc/fstab
-echo 'localhost:/media-volume ~/media glusterfs defaults,_netdev,noauto,x-systemd.automount 0 0' | sudo tee -a /etc/fstab
+echo 'localhost:/appdata-volume /mnt/gluster/appdata glusterfs defaults,_netdev 0 0' | sudo tee -a /etc/fstab
+echo 'localhost:/media-volume /mnt/gluster/media glusterfs defaults,_netdev 0 0' | sudo tee -a /etc/fstab
 SSH
 done
 
-sudo gluster volume create appdata-volume replica 4 swarm1.netbird.cloud:~/.gluster/appdata swarm2.netbird.cloud:~/.gluster/appdata swarm3.netbird.cloud:~/.gluster/appdata swarm4.netbird.cloud:~/.gluster/appdata
-sudo gluster volume create media-volume swarm1.netbird.cloud:~/.gluster/media swarm2.netbird.cloud:~/.gluster/media swarm3.netbird.cloud:~/.gluster/media swarm4.netbird.cloud:~/.gluster/media
+for node in ${cluster[@]} ; do
+  sudo gluster peer probe $node.netbird.cloud
+done
+
+sudo gluster volume create appdata-volume replica 4 swarm1.netbird.cloud:/mnt/gluster/bricks/appdata swarm2.netbird.cloud:/mnt/gluster/bricks/appdata swarm3.netbird.cloud:/mnt/gluster/bricks/appdata swarm4.netbird.cloud:/mnt/gluster/bricks/appdata
+sudo gluster volume create media-volume swarm1.netbird.cloud:/mnt/gluster/bricks/media swarm2.netbird.cloud:/mnt/gluster/bricks/media swarm3.netbird.cloud:/mnt/gluster/bricks/media swarm4.netbird.cloud:/mnt/gluster/bricks/media
 sudo gluster volume start appdata-volume
 sudo gluster volume start media-volume
 
@@ -69,7 +75,7 @@ sudo mount -a
 SSH
 done
 
-mkdir -p ~/appdata/{flame,gitea,nextcloud,pihole,vaultwarden,vscode,plex,radarr,sonarr,sabnzbd} ~/media/{shows,movies,usenet}
+mkdir -p /mnt/gluster/appdata/{flame,gitea,nextcloud,pihole,vaultwarden,vscode,plex,radarr,sonarr,sabnzbd} /mnt/gluster/appdata/{shows,movies,usenet}
 
 
 ########## docker setup
