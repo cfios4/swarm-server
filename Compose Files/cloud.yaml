@@ -10,11 +10,10 @@ services:
       labels:
         caddy: drop.cafio.co
         caddy.reverse_proxy: "{{upstreams 3000}}"
-        homepage.group: Cloud
-        homepage.name: Pairdrop
-        homepage.icon: share-variant
-        homepage.href: https://drop.cafio.co/
-        homepage.description: "AirDrop"
+        flame.type: app
+        flame.name: Pairdrop
+        flame.icon: share-variant
+        flame.url: https://drop.${DOMAIN}/
     networks:
       - overlaynet
     environment:
@@ -29,11 +28,10 @@ services:
       labels:
         caddy: cloud.cafio.co
         caddy.reverse_proxy: "{{upstreams 80}}"
-        homepage.group: Cloud
-        homepage.name: Nextcloud
-        homepage.icon: cloud
-        homepage.href: https://cloud.cafio.co/
-        homepage.description: File Server
+        flame.type: app
+        flame.name: Cloud
+        flame.icon: cloud
+        flame.url: https://cloud.${DOMAIN}/
     networks:
       - overlaynet
     environment:
@@ -52,11 +50,10 @@ services:
       labels:
         caddy: bin.cafio.co
         caddy.reverse_proxy: "{{upstreams 8080}}"
-        homepage.group: Cloud
-        homepage.name: Microbin
-        homepage.icon: clipboard
-        homepage.href: https://bin.cafio.co/
-        homepage.description: Paste bin
+        flame.type: app
+        flame.name: Microbin
+        flame.icon: delete-variant
+        flame.url: https://bin.${DOMAIN}/
     networks:
       - overlaynet
     environment:
@@ -89,11 +86,10 @@ services:
         caddy: code.cafio.co
         caddy.reverse_proxy: "{{upstreams 3000}}"
         caddy.basicauth.swarm: $$2a$$12$$8V1u/O/1LuzQDcV56hxX0ekowne/RKeBi6jlT1vLNo0DkdQbFrnKm
-        homepage.group: Cloud
-        homepage.name: Code
-        homepage.icon: vscode
-        homepage.href: https://code.cafio.co/
-        homepage.description: Browser coding
+        flame.type: app
+        flame.name: VSCode
+        flame.icon: microsoft-visual-studio
+        flame.url: https://code.${DOMAIN}/
     networks:
       - overlaynet
     environment:
@@ -108,11 +104,10 @@ services:
       labels:
         caddy: vault.cafio.co
         caddy.reverse_proxy: "{{upstreams 80}}"
-        homepage.group: Cloud
-        homepage.name: Vault
-        homepage.icon: lock
-        homepage.href: https://vault.cafio.co/
-        homepage.description: Password Manager
+        flame.type: app
+        flame.name: Vaultwarden
+        flame.icon: lock
+        flame.url: https://vault.${DOMAIN}/
     networks:
       - overlaynet
     environment:
@@ -137,11 +132,10 @@ services:
       labels:
         caddy: git.cafio.co
         caddy.reverse_proxy: "{{upstreams 3000}}"
-        homepage.group: Cloud
-        homepage.name: Git
-        homepage.icon: git
-        homepage.href: https://git.cafio.co/
-        homepage.description: Git Server
+        flame.type: app
+        flame.name: Gitea
+        flame.icon: git
+        flame.url: https://git.${DOMAIN}/
     networks:
       - overlaynet
     environment:

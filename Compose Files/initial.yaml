@@ -23,26 +23,22 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${APPDATA_MNT}:/data
       - ${APPDATA_MNT}:/config
-      
-  homepage:
-    image: ghcr.io/gethomepage/homepage:latest
+
+  flame:
+    image: pawelmalak/flame:multiarch
     deploy:
       replicas: 1
-      placement:
-        constraints:
-          - node.role == manager
       labels:
         caddy: cafio.co
-        caddy.reverse_proxy: "{{upstreams 3000}}"
+        caddy.reverse_proxy: "{{upstreams 5005}}"
     networks:
       - overlaynet
     environment:
       TZ: ${TZ}
-      PUID: 1001
-      PGID: 1002
+      PASSWORD: ${PASSWORD}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${APPDATA_MNT}/homepage:/app/config
+      - ${APPDATA_MNT}/flame:/app/data
 
   pihole:
     image: cbcrowe/pihole-unbound:latest
@@ -52,11 +48,11 @@ services:
         constraints: 
           - node.labels.dns == true # Force managers because they will only have the macvlan setup
       labels:
-        homepage.group: Internal
-        homepage.name: PiHole
-        homepage.icon: pi-hole
-        homepage.instance.internal.href: http://pi.hole/
-        homepage.description: DNS
+        flame.type: app
+        flame.name: PiHole
+        flame.icon: pi-hole
+        flame.url: http://pi.hole/
+        flame.visibility: hidden
     networks:
       - dns-ip
     cap_add: # needed if using as DHCP server

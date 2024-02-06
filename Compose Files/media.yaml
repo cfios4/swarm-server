@@ -13,11 +13,10 @@ services:
         caddy.reverse_proxy.transport: http
         caddy.reverse_proxy.transport.tls:
         caddy.reverse_proxy.transport.tls_insecure_skip_verify:
-        homepage.group: Media
-        homepage.name: Plex
-        homepage.icon: plex
-        homepage.href: https://watch.cafio.co/
-        homepage.description: Media Server
+        flame.type: app
+        flame.name: Plex
+        flame.icon: plex
+        flame.url: https://watch.$DOMAIN/
     networks:
       - overlaynet
     environment:
@@ -30,11 +29,6 @@ services:
       - $MEDIA_MNT:/data/media:ro
     tmpfs:
       - /transcode
-    labels:
-      - flame.type=app
-      - flame.name=Plex
-      - flame.icon=plex
-      - flame.url=https://watch.$DOMAIN/
 
   radarr:
     image: hotio/radarr:latest
@@ -43,11 +37,11 @@ services:
       labels:
         caddy: cafio.co
         caddy.reverse_proxy: /radarr* "{{upstreams 7878}}"
-        homepage.group: Media
-        homepage.name: Radarr
-        homepage.icon: radarr
-        homepage.href: https://cafio.co/radarr/
-        homepage.description: Movie manager
+        flame.type: app
+        flame.name: Radarr
+        flame.icon: movie-open
+        flame.url: https://$DOMAIN/radarr/
+        flame.visibility: hidden
     networks:
       - overlaynet
     environment:
@@ -68,11 +62,11 @@ services:
       labels:
         caddy: cafio.co
         caddy.reverse_proxy: /sonarr* "{{upstreams 8989}}"
-        homepage.group: Media
-        homepage.name: Sonarr
-        homepage.icon: sonarr
-        homepage.href: https://cafio.co/sonarr/
-        homepage.description: TV Show manager
+        flame.type: app
+        flame.name: Sonarr
+        flame.icon: youtube-tv
+        flame.url: https://$DOMAIN/sonarr/
+        flame.visibility: hidden
     networks:
       - overlaynet
     environment:
@@ -95,11 +89,11 @@ services:
         caddy.reverse_proxy: /sabnzbd* "{{upstreams 8080}}"
         caddy.basicauth: /sabnzbd*
         caddy.basicauth.swarm: $$2a$$12$$8V1u/O/1LuzQDcV56hxX0ekowne/RKeBi6jlT1vLNo0DkdQbFrnKm
-        homepage.group: Media
-        homepage.name: Sabnzbd
-        homepage.icon: sabnzbd
-        homepage.href: https://cafio.co/sabnzbd/
-        homepage.description: 🏴‍☠️
+        flame.type: app
+        flame.name: Sabnzbd
+        flame.icon: cloud-download
+        flame.url: https://$DOMAIN/sabnzbd/
+        flame.visibility: hidden
     networks:
       - overlaynet
     environment:
