@@ -23,9 +23,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${APPDATA_MNT}:/data
       - ${APPDATA_MNT}:/config
-
-  flame:
-    image: pawelmalak/flame:multiarch
+      
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
     deploy:
       replicas: 1
       labels:
@@ -35,10 +35,11 @@ services:
       - overlaynet
     environment:
       TZ: ${TZ}
-      PASSWORD: ${PASSWORD}
+      PUID: 1001
+      PGID: 1002
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${APPDATA_MNT}/flame:/app/data
+      - ${APPDATA_MOUNT}/homepage:/app/config
 
   pihole:
     image: cbcrowe/pihole-unbound:latest
