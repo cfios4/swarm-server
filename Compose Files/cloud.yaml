@@ -13,7 +13,7 @@ services:
         homepage.group: Cloud
         homepage.name: Pairdrop
         homepage.icon: share-variant
-        homepage.instance.public.href: https://drop.cafio.co/
+        homepage.href: https://drop.cafio.co/
         homepage.description: "AirDrop"
     networks:
       - overlaynet
@@ -32,7 +32,7 @@ services:
         homepage.group: Cloud
         homepage.name: Nextcloud
         homepage.icon: cloud
-        homepage.instance.public.href: https://cloud.cafio.co/
+        homepage.href: https://cloud.cafio.co/
         homepage.description: File Server
     networks:
       - overlaynet
@@ -55,7 +55,7 @@ services:
         homepage.group: Cloud
         homepage.name: Microbin
         homepage.icon: clipboard
-        homepage.instance.public.href: https://bin.cafio.co/
+        homepage.href: https://bin.cafio.co/
         homepage.description: Paste bin
     networks:
       - overlaynet
@@ -92,7 +92,7 @@ services:
         homepage.group: Cloud
         homepage.name: Code
         homepage.icon: vscode
-        homepage.instance.public.href: https://code.cafio.co/
+        homepage.href: https://code.cafio.co/
         homepage.description: Browser coding
     networks:
       - overlaynet
@@ -111,7 +111,7 @@ services:
         homepage.group: Cloud
         homepage.name: Vault
         homepage.icon: lock
-        homepage.instance.public.href: https://vault.cafio.co/
+        homepage.href: https://vault.cafio.co/
         homepage.description: Password Manager
     networks:
       - overlaynet
@@ -140,7 +140,7 @@ services:
         homepage.group: Cloud
         homepage.name: Git
         homepage.icon: git
-        homepage.instance.public.href: https://git.cafio.co/
+        homepage.href: https://git.cafio.co/
         homepage.description: Git Server
     networks:
       - overlaynet

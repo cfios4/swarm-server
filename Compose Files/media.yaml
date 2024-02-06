@@ -16,7 +16,7 @@ services:
         homepage.group: Media
         homepage.name: Plex
         homepage.icon: plex
-        homepage.instance.public.href: https://watch.cafio.co/
+        homepage.href: https://watch.cafio.co/
         homepage.description: Media Server
     networks:
       - overlaynet
@@ -46,7 +46,7 @@ services:
         homepage.group: Media
         homepage.name: Radarr
         homepage.icon: radarr
-        homepage.instance.public.href: https://cafio.co/radarr/
+        homepage.href: https://cafio.co/radarr/
         homepage.description: Movie manager
     networks:
       - overlaynet
@@ -71,7 +71,7 @@ services:
         homepage.group: Media
         homepage.name: Sonarr
         homepage.icon: sonarr
-        homepage.instance.public.href: https://cafio.co/sonarr/
+        homepage.href: https://cafio.co/sonarr/
         homepage.description: TV Show manager
     networks:
       - overlaynet
@@ -98,7 +98,7 @@ services:
         homepage.group: Media
         homepage.name: Sabnzbd
         homepage.icon: sabnzbd
-        homepage.instance.public.href: https://cafio.co/sabnzbd/
+        homepage.href: https://cafio.co/sabnzbd/
         homepage.description: 🏴‍☠️
     networks:
       - overlaynet
