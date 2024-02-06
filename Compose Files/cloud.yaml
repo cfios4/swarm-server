@@ -10,17 +10,17 @@ services:
       labels:
         caddy: drop.cafio.co
         caddy.reverse_proxy: "{{upstreams 3000}}"
+        homepage.group: Cloud
+        homepage.name: Pairdrop
+        homepage.icon: share-variant
+        homepage.instance.public.href: https://drop.cafio.co/
+        homepage.description: "AirDrop"
     networks:
       - overlaynet
     environment:
       TZ: ${TZ}
     tmpfs:
       - /config
-    labels:
-      - flame.type=app
-      - flame.name=Pairdrop
-      - flame.icon=share-variant
-      - flame.url=https://drop.${DOMAIN}/
 
   nextcloud:
     image: nextcloud:latest
@@ -29,6 +29,11 @@ services:
       labels:
         caddy: cloud.cafio.co
         caddy.reverse_proxy: "{{upstreams 80}}"
+        homepage.group: Cloud
+        homepage.name: Nextcloud
+        homepage.icon: cloud
+        homepage.instance.public.href: https://cloud.cafio.co/
+        homepage.description: File Server
     networks:
       - overlaynet
     environment:
@@ -39,11 +44,6 @@ services:
       SQLITE_DATABASE: nextcloud
     volumes:
       - ${APPDATA_MNT}/nextcloud:/var/www/html
-    labels:
-      - flame.type=app
-      - flame.name=Cloud
-      - flame.icon=cloud
-      - flame.url=https://cloud.${DOMAIN}/
 
   microbin:
     image: danielszabo99/microbin:latest
@@ -52,6 +52,11 @@ services:
       labels:
         caddy: bin.cafio.co
         caddy.reverse_proxy: "{{upstreams 8080}}"
+        homepage.group: Cloud
+        homepage.name: Microbin
+        homepage.icon: clipboard
+        homepage.instance.public.href: https://bin.cafio.co/
+        homepage.description: Paste bin
     networks:
       - overlaynet
     environment:
@@ -75,11 +80,6 @@ services:
       MICROBIN_DISABLE_TELEMETRY: 'true'
     tmpfs:
       - /app/microbin_data
-    labels:
-      - flame.type=app
-      - flame.name=Microbin
-      - flame.icon=delete-variant
-      - flame.url=https://bin.${DOMAIN}/
   
   code:
     image: linuxserver/vscodium:latest
@@ -89,17 +89,17 @@ services:
         caddy: code.cafio.co
         caddy.reverse_proxy: "{{upstreams 3000}}"
         caddy.basicauth.swarm: $$2a$$12$$8V1u/O/1LuzQDcV56hxX0ekowne/RKeBi6jlT1vLNo0DkdQbFrnKm
+        homepage.group: Cloud
+        homepage.name: Code
+        homepage.icon: vscode
+        homepage.instance.public.href: https://code.cafio.co/
+        homepage.description: Browser coding
     networks:
       - overlaynet
     environment:
       TZ: ${TZ}
     volumes:
       - ${APPDATA_MNT}/vscode:/config
-    labels:
-      - flame.type=app
-      - flame.name=VSCode
-      - flame.icon=microsoft-visual-studio
-      - flame.url=https://code.${DOMAIN}/
 
   vaultwarden:
     image: vaultwarden/server:latest
@@ -108,6 +108,11 @@ services:
       labels:
         caddy: vault.cafio.co
         caddy.reverse_proxy: "{{upstreams 80}}"
+        homepage.group: Cloud
+        homepage.name: Vault
+        homepage.icon: lock
+        homepage.instance.public.href: https://vault.cafio.co/
+        homepage.description: Password Manager
     networks:
       - overlaynet
     environment:
@@ -124,11 +129,6 @@ services:
       YUBICO_SECRET_KEY: 72o9iOvaz1yUO+6MomnE7EkPNgw=
     volumes:
       - ${APPDATA_MNT}/vaultwarden:/data
-    labels:
-      - flame.type=app
-      - flame.name=Vaultwarden
-      - flame.icon=lock
-      - flame.url=https://vault.${DOMAIN}/
 
   gitea:
     image: gitea/gitea:latest
@@ -137,6 +137,11 @@ services:
       labels:
         caddy: git.cafio.co
         caddy.reverse_proxy: "{{upstreams 3000}}"
+        homepage.group: Cloud
+        homepage.name: Git
+        homepage.icon: git
+        homepage.instance.public.href: https://git.cafio.co/
+        homepage.description: Git Server
     networks:
       - overlaynet
     environment:
@@ -151,11 +156,6 @@ services:
     volumes:
       - ${APPDATA_MNT}/gitea/config:/data/gitea
       - ${APPDATA_MNT}/gitea/data:/var/lib/gitea
-    labels:
-      - flame.type=app
-      - flame.name=Gitea
-      - flame.icon=git
-      - flame.url=https://git.${DOMAIN}/
 
 networks:
   overlaynet:

@@ -28,9 +28,12 @@ services:
     image: ghcr.io/gethomepage/homepage:latest
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
       labels:
         caddy: cafio.co
-        caddy.reverse_proxy: "{{upstreams 5005}}"
+        caddy.reverse_proxy: "{{upstreams 3000}}"
     networks:
       - overlaynet
     environment:
@@ -39,7 +42,7 @@ services:
       PGID: 1002
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${APPDATA_MOUNT}/homepage:/app/config
+      - ${APPDATA_MNT}/homepage:/app/config
 
   pihole:
     image: cbcrowe/pihole-unbound:latest
@@ -48,6 +51,12 @@ services:
       placement:
         constraints: 
           - node.labels.dns == true # Force managers because they will only have the macvlan setup
+      labels:
+        homepage.group: Internal
+        homepage.name: PiHole
+        homepage.icon: pi-hole
+        homepage.instance.internal.href: http://pi.hole/
+        homepage.description: DNS
     networks:
       - dns-ip
     cap_add: # needed if using as DHCP server
@@ -68,12 +77,6 @@ services:
     volumes:
       - ${APPDATA_MNT}/pihole:/etc/pihole:rw
       - ${APPDATA_MNT}/pihole/unbound:/etc/dnsmasq.d:rw
-    labels:
-      - flame.type=app
-      - flame.name=PiHole
-      - flame.icon=pi-hole
-      - flame.url=http://pi.hole/
-      - flame.visibility=hidden
 
 networks:
   overlaynet:
