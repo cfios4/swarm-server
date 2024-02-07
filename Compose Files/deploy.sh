@@ -1,8 +1,12 @@
 #!/bin/sh
-read -p "Password for apps (Flame, Nextcloud, ...)" PASSWORD
+until [ ! -z "$PASSWORD" ] ; do
+	echo "\$PASSWORD is not set"
+	read -p "Set admin password for apps (Flame, Nextcloud, ...): " PASSWORD
+	export PASSWORD
+done
+
 read -p "Plex claim ID (https://plex.tv/claim): " PLEX_CLAIM
-export $PASSWORD
-export $PLEX_CLAIM
+export PLEX_CLAIM
 export APPDATA_MNT=/mnt/gluster/appdata
 export MEDIA_MNT=/mnt/gluster/media
 export DOMAIN=cafio.co
