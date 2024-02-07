@@ -36,9 +36,11 @@ done
 
 ########## gluster setup
 ### LEADER ONLY
+read -p "Password for 'swarm': " password
+
 for node in ${cluster[@]} ; do
 	ssh swarm@$node.netbird.cloud <<SSH
-echo Admin!!1 | sudo -sS
+echo $password | sudo -sS
 sudo -s
 mkdir -vp /mnt/gluster{/appdata,/media,/bricks}
 
@@ -66,7 +68,7 @@ sudo gluster volume start media-volume
 
 for node in ${cluster[@]} ; do
 	ssh swarm@$node.netbird.cloud bash <<SSH
-echo Admin!!1 | sudo -sS
+echo $password | sudo -sS
 sudo -s
 echo "Mounting /etc/fstab on $node..."
 sudo mount -a
@@ -80,7 +82,7 @@ sudo mkdir -p /mnt/gluster/appdata/{caddy,flame,gitea,nextcloud,pihole,plex,rada
 ### LEADER ONLY
 for node in $(docker node ls --filter "role=manager" --format "{{.Hostname}}") ; do
     ssh swarm@$node.netbird.cloud bash <<SSH
-echo Admin!!1 | sudo -sS
+echo $password | sudo -sS
 sudo -s
 sudo apt update ; sudo apt install ipcalc-ng ; sudo apt remove ipcalc > /dev/null > 2>&1
 echo "Creating Docker network for DNS on $node..."
