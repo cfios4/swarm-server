@@ -12,4 +12,4 @@ export DNS=$(docker network inspect macvlan4home -f '{{range .IPAM.Config}}{{.IP
 export NETWORK=$(ip a | grep -E 'enp|eth|eno' | grep -m 1 inet | awk '{print $2}' | awk -F'/' '{print $1}' | awk -F'.' '{print $1"."$2"."$3}')
 
 
-docker stack up -c $1.yaml $1
+docker stack up -c $1 $(basename $1 .yaml)
