@@ -73,7 +73,7 @@ sudo mount -a
 SSH
 done
 
-sudo mkdir -p /mnt/gluster/appdata/{flame,gitea,nextcloud,pihole,vaultwarden,vscode,plex,radarr,sonarr,sabnzbd} /mnt/gluster/appdata/{shows,movies,usenet}
+sudo mkdir -p /mnt/gluster/appdata/{caddy,flame,gitea,nextcloud,pihole,plex,radarr,sabnzbd,sonarr,vaultwarden,vscode} /mnt/gluster/media/{shows,movies,usenet}
 
 
 ########## docker setup
