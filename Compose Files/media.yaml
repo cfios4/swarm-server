@@ -103,7 +103,7 @@ services:
       UMASK: 002
     volumes:
       - $APPDATA_MNT/sabnzbd:/config
-      - $MEDIA_MNT/usenet:/data/usenet
+      - $MEDIA_MNT/usenet:/data/usenet:rw
 
 networks:
   overlaynet:
