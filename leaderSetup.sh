@@ -43,7 +43,7 @@ done
 
 ########## gluster setup
 ### LEADER ONLY
-read -p "Password for 'swarm': " password
+read -p "Password for 'swarm': " PASSWORD
 
 for node in ${cluster[@]} ; do
 	ssh swarm@$node.lan <<SSH

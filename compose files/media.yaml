@@ -19,6 +19,11 @@ services:
         flame.url: https://watch.$DOMAIN/
     networks:
       - overlaynet
+    ports:
+      - target: 32400
+        published: 32400
+        protocol: tcp
+        mode: host
     environment:
       TZ: $TZ
       PLEX_CLAIM: $PLEX_CLAIM #https://plex.tv/claim
@@ -103,7 +108,7 @@ services:
       UMASK: 002
     volumes:
       - $APPDATA_MNT/sabnzbd:/config
-      - $MEDIA_MNT/usenet:/data/usenet
+      - $MEDIA_MNT/usenet:/data/usenet:rw
 
 networks:
   overlaynet:
