@@ -27,10 +27,10 @@ for node in ${cluster[@]} ; do
 done
 
 for node in ${cluster[@]:1:2} ; do
-	ssh swarm@$node.netbird.cloud docker swarm join --token $manager_token $swarmip:2377
+	ssh swarm@$node.lan docker swarm join --token $manager_token $swarmip:2377
 done
 for node in ${cluster[@]:3} ; do
-	ssh swarm@swarm4.netbird.cloud docker swarm join --token $worker_token $swarmip:2377
+	ssh swarm@swarm4.lan docker swarm join --token $worker_token $swarmip:2377
 done
 
 
@@ -39,7 +39,7 @@ done
 read -p "Password for 'swarm': " PASSWORD
 
 for node in ${cluster[@]} ; do
-	ssh swarm@$node.netbird.cloud <<SSH
+	ssh swarm@$node.lan <<SSH
 echo $PASSWORD | sudo -sS
 sudo -s
 mkdir -vp /mnt/gluster{/appdata,/media,/bricks}
@@ -58,16 +58,16 @@ SSH
 done
 
 for node in ${cluster[@]} ; do
-  sudo gluster peer probe $node.netbird.cloud
+  sudo gluster peer probe $node.lan
 done
 
-sudo gluster volume create appdata-volume replica 4 swarm1.netbird.cloud:/mnt/gluster/bricks/appdata swarm2.netbird.cloud:/mnt/gluster/bricks/appdata swarm3.netbird.cloud:/mnt/gluster/bricks/appdata swarm4.netbird.cloud:/mnt/gluster/bricks/appdata
-sudo gluster volume create media-volume swarm1.netbird.cloud:/mnt/gluster/bricks/media swarm2.netbird.cloud:/mnt/gluster/bricks/media swarm3.netbird.cloud:/mnt/gluster/bricks/media swarm4.netbird.cloud:/mnt/gluster/bricks/media
+sudo gluster volume create appdata-volume replica 4 swarm1.lan:/mnt/gluster/bricks/appdata swarm2.lan:/mnt/gluster/bricks/appdata swarm3.lan:/mnt/gluster/bricks/appdata swarm4.lan:/mnt/gluster/bricks/appdata
+sudo gluster volume create media-volume swarm1.lan:/mnt/gluster/bricks/media swarm2.lan:/mnt/gluster/bricks/media swarm3.lan:/mnt/gluster/bricks/media swarm4.lan:/mnt/gluster/bricks/media
 sudo gluster volume start appdata-volume
 sudo gluster volume start media-volume
 
 for node in ${cluster[@]} ; do
-	ssh swarm@$node.netbird.cloud bash <<SSH
+	ssh swarm@$node.lan bash <<SSH
 echo $password | sudo -sS
 sudo -s
 echo "Mounting /etc/fstab on $node..."
@@ -81,7 +81,7 @@ sudo mkdir -p /mnt/gluster/appdata/{caddy,flame,gitea,nextcloud,pihole,plex,rada
 ########## docker setup
 ### LEADER ONLY
 for node in $(docker node ls --filter "role=manager" --format "{{.Hostname}}") ; do
-    ssh swarm@$node.netbird.cloud bash <<SSH
+    ssh swarm@$node.lan bash <<SSH
 echo $password | sudo -sS
 sudo -s
 sudo apt update ; sudo apt install ipcalc-ng ; sudo apt remove ipcalc > /dev/null > 2>&1
