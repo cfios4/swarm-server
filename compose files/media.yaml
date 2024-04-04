@@ -27,11 +27,11 @@ services:
     environment:
       TZ: $TZ
       PLEX_CLAIM: $PLEX_CLAIM #https://plex.tv/claim
-      ADVERTISE_IP: https://swarm.lan:32400,https://$NETBIRDIP:32400,https://watch.$DOMAIN:443
+      ADVERTISE_IP: https://swarm.lan:32400,https://watch.$DOMAIN:443
       ALLOWED_NETWORKS: 192.168.45.0/24,100.64.0.0/10,10.0.0.0/8
     volumes:
-      - $APPDATA_MNT/plex:/config
-      - $MEDIA_MNT:/data/media:ro
+      - /mnt/gluster/appdata/plex:/config
+      - /mnt/gluster/media:/data/media:ro
     tmpfs:
       - /transcode
 
@@ -57,8 +57,8 @@ services:
     depends_on:
       - sabnzbd
     volumes:
-      - $APPDATA_MNT/radarr:/config
-      - $MEDIA_MNT:/data
+      - /mnt/gluster/appdata/radarr:/config
+      - /mnt/gluster/media:/data
 
   sonarr:
     image: hotio/sonarr:latest
@@ -82,8 +82,8 @@ services:
     depends_on:
       - sabnzbd
     volumes:
-      - $APPDATA_MNT/sonarr:/config
-      - $MEDIA_MNT:/data
+      - /mnt/gluster/appdata/sonarr:/config
+      - /mnt/gluster/media:/data
 
   sabnzbd:
     image: hotio/sabnzbd:latest
@@ -107,8 +107,8 @@ services:
       PGID: 1002
       UMASK: 002
     volumes:
-      - $APPDATA_MNT/sabnzbd:/config
-      - $MEDIA_MNT/usenet:/data/usenet:rw
+      - /mnt/gluster/appdata/sabnzbd:/config
+      - /mnt/gluster/media/usenet:/data/usenet:rw
 
 networks:
   overlaynet:
