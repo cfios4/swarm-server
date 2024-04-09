@@ -6,6 +6,7 @@ if [ "$EUID" -ne 0 ] ; then
 fi
 
 ### script assumes/relies on the following
+# Tested with Ubuntu 22.04
 # the node names will be swarm1, swarm2, swarm3, swarm4 (only works with 4)
 # swarm1 will be the initial/management/administrative
 # swarm2-3 will be managers
@@ -148,15 +149,20 @@ useradd -m -s /bin/bash -G docker,sudo $1
 echo $1:$2 | chpasswd
 echo -e 'TZ=America/New_York\neval "$(starship init bash)"' >> /home/$1/.bashrc
 echo "##### Gluster and Keepalived installed... #####"
+echo "##### Performing tasks for $3... #####"
 
 nvme_setup $3
 
 case "$3" in
     "swarm1")
         # On swarm1
-        echo "##### Performing tasks for $3... #####"
         echo "cluster=('swarm1' 'swarm2' 'swarm3' 'swarm4')" >> /home/$1/.bashrc
         export cluster=('swarm1' 'swarm2' 'swarm3' 'swarm4')
+
+        ssh-keygen -N "" -f /home/$1/.ssh/id_rsa
+        chmod 700 "/home/$1/.ssh"
+        chmod 600 "/home/$1/.ssh/id_rsa"
+        chmod 644 "/home/$1/.ssh/id_rsa.pub"
 
         docker swarm init
 
@@ -164,9 +170,9 @@ case "$3" in
         echo -e "docker swarm join --token $(docker swarm join-token manager -q) $swarmip:2377" > /tmp/manager
         echo -e "docker swarm join --token $(docker swarm join-token worker -q) $swarmip:2377" > /tmp/worker
 
-        counter=$(echo $swarmip | awk -F. '{print $4}')
+        host=$(echo $swarmip | awk -F. '{print $4}')
         for node in "${cluster[@]}" ; do
-            echo "192.168.45.$((counter++)) $node.lan" >> /etc/hosts
+            echo "192.168.45.$((host++)) $node.lan" >> /etc/hosts
         done
 
         keepalived_setup $2 $3
@@ -174,6 +180,7 @@ case "$3" in
         cat << EOF > /usr/local/bin/final_touches
 for node in "${cluster[@]}" ; do
     gluster peer probe $node.lan
+    sshpass -p $2 ssh-copy-id -o StrictHostKeyChecking=no -i /home/$1/.ssh/id_rsa.pub $1@$node.lan
 done
 
 gluster volume create appdata-volume replica 4 swarm1.lan:/mnt/gluster/bricks/appdata swarm2.lan:/mnt/gluster/bricks/appdata swarm3.lan:/mnt/gluster/bricks/appdata swarm4.lan:/mnt/gluster/bricks/appdata
@@ -193,7 +200,6 @@ EOF
 
     "swarm2" | "swarm3")
         # On swarm2 or swarm3
-        echo "##### Performing tasks for $3... #####"
         curl -fsSL swarm1.lan/manager | bash
 
         keepalived_setup $2 $3
@@ -203,7 +209,6 @@ EOF
 
     "swarm4")
         # On swarm4
-        echo "##### Performing tasks for $3... #####"
         curl -fsSL swarm1.lan/worker | bash
 
         keepalived_setup $2 $3
