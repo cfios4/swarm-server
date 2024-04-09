@@ -1,0 +1,164 @@
+---
+version: "3.8"
+
+services:
+
+  pairdrop:
+    image: linuxserver/pairdrop:latest
+    deploy:
+      replicas: 1
+      labels:
+        caddy: drop.cafio.co
+        caddy.reverse_proxy: "{{upstreams 3000}}"
+        flame.type: app
+        flame.name: Pairdrop
+        flame.icon: share-variant
+        flame.url: https://drop.cafio.co/
+    networks:
+      - overlaynet
+    environment:
+      TZ: ${TZ}
+    tmpfs:
+      - /config
+
+  nextcloud:
+    image: nextcloud:latest
+    deploy:
+      replicas: 1
+      labels:
+        caddy: cloud.cafio.co
+        caddy.reverse_proxy: "{{upstreams 80}}"
+        caddy.header: /*
+        caddy.header.Strict-Transport-Security: '"max-age=15552000;"'
+        caddy.rewrite_0: /.well-known/carddav /remote.php/dav
+        caddy.rewrite_1: /.well-known/caldav /remote.php/dav
+        flame.type: app
+        flame.name: Cloud
+        flame.icon: cloud
+        flame.url: https://cloud.cafio.co/
+    networks:
+      - overlaynet
+    environment:
+      TZ: ${TZ}
+      NEXTCLOUD_ADMIN_USER: casey
+      NEXTCLOUD_ADMIN_PASSWORD: ${PASSWORD}
+      NEXTCLOUD_TRUSTED_DOMAINS: cloud.cafio.co
+      SQLITE_DATABASE: nextcloud
+    volumes:
+      - /mnt/gluster/appdata/nextcloud:/var/www/html
+
+  microbin:
+    image: danielszabo99/microbin:latest
+    deploy:
+      replicas: 1
+      labels:
+        caddy: bin.cafio.co
+        caddy.reverse_proxy: "{{upstreams 8080}}"
+        flame.type: app
+        flame.name: Microbin
+        flame.icon: delete-variant
+        flame.url: https://bin.cafio.co/
+    networks:
+      - overlaynet
+    environment:
+      TZ: ${TZ}
+      MICROBIN_ADMIN_USERNAME: admin
+      MICROBIN_ADMIN_PASSWORD: ${PASSWORD}
+      MICROBIN_EDITABLE: 'true'
+      MICROBIN_HIGHLIGHTSYNTAX: 'true'
+      MICROBIN_BIND: '0.0.0.0'
+      MICROBIN_PRIVATE: 'true'
+      MICROBIN_PUBLIC_PATH: https://bin.cafio.co/
+      MICROBIN_SHOW_READ_STATS: 'true'
+      MICROBIN_TITLE: cafio
+      MICROBIN_ENABLE_BURN_AFTER: 'true'
+      MICROBIN_WIDE: 'true'
+      MICROBIN_QR: 'true'
+      MICROBIN_EXTERNAL_PASTA: 'true'
+      MICROBIN_ENABLE_READONLY: 'true'
+      MICROBIN_ENCRYPTION_CLIENT_SIDE: 'true'
+      MICROBIN_ENCRYPTION_SERVER_SIDE: 'true'
+      MICROBIN_DISABLE_TELEMETRY: 'true'
+    tmpfs:
+      - /app/microbin_data
+  
+  code:
+    image: codercom/code-server:latest
+    deploy:
+      replicas: 1
+      labels:
+        caddy: code.cafio.co
+        caddy.reverse_proxy: "{{upstreams 8080}}"
+        caddy.basicauth.swarm: $$2a$$12$$8V1u/O/1LuzQDcV56hxX0ekowne/RKeBi6jlT1vLNo0DkdQbFrnKm
+        flame.type: app
+        flame.name: VSCode
+        flame.icon: microsoft-visual-studio
+        flame.url: https://code.cafio.co/
+    networks:
+      - overlaynet
+    user: $UID:$GID
+    environment:
+      TZ: ${TZ}
+      DOCKER_USER: $USER
+    volumes:
+      - /mnt/gluster/appdata/code/.local:/home/coder/.local
+      - /mnt/gluster/appdata/code/.config:/home/coder/.config
+      - /mnt/gluster/appdata/code/project:/home/coder/project
+
+  vaultwarden:
+    image: vaultwarden/server:latest
+    deploy:
+      replicas: 1
+      labels:
+        caddy: vault.cafio.co
+        caddy.reverse_proxy: "{{upstreams 80}}"
+        flame.type: app
+        flame.name: Vaultwarden
+        flame.icon: lock
+        flame.url: https://vault.cafio.co/
+    networks:
+      - overlaynet
+    environment:
+      TZ: ${TZ}
+      DOMAIN: https://vault.cafio.co/
+      SENDS_ALLOWED: 'true'
+      EMERGENCY_ACCESS_ALLOWED: 'true'
+      ADMIN_TOKEN: ''
+      WEB_VAULT_ENABLED: 'true'
+      SIGNUPS_ALLOWED: 'false'
+      SIGNUPS_VERIFY: 'false'
+      SIGNUPS_DOMAINS_WHITELIST: cafio.co
+      YUBICO_CLIENT_ID: '92307'
+      YUBICO_SECRET_KEY: 72o9iOvaz1yUO+6MomnE7EkPNgw=
+    volumes:
+      - /mnt/gluster/appdata/vaultwarden:/data
+
+  gitea:
+    image: gitea/gitea:latest
+    deploy:
+      replicas: 1
+      labels:
+        caddy: git.cafio.co
+        caddy.reverse_proxy: "{{upstreams 3000}}"
+        flame.type: app
+        flame.name: Gitea
+        flame.icon: git
+        flame.url: https://git.cafio.co/
+    networks:
+      - overlaynet
+    environment:
+      TZ: ${TZ}
+      PROTOCOL: https
+      DOMAIN: git.cafio.co
+      HTTP_PORT: '3000'
+      APP_NAME: Gitea
+      SHOW_USER_EMAIL: 'false'
+      REVERSE_PROXY_TRUSTED_PROXIES: 127.0.0.0/8,::1/128, 192.168.45.0/24, cafio.co
+      EMAIL_DOMAIN_ALLOWLIST: cafio.co
+    volumes:
+      - /mnt/gluster/appdata/gitea/config:/data/gitea
+      - /mnt/gluster/appdata/gitea/data:/var/lib/gitea
+
+networks:
+  overlaynet:
+    external: true
