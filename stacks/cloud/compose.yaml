@@ -97,10 +97,10 @@ services:
         flame.url: https://code.cafio.co/
     networks:
       - overlaynet
-    user: $UID:$GID
+    user: ${UID}:${GID}
     environment:
       TZ: ${TZ}
-      DOCKER_USER: $USER
+      DOCKER_USER: ${USER}
     volumes:
       - /mnt/gluster/appdata/code:/root/.config/code-server
       - /mnt/gluster/appdata/code/.local:/home/coder/.local
