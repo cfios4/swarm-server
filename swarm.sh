@@ -27,7 +27,7 @@ function nvme_setup () {
     local MEDIAMNT=/mnt/gluster/media
     local NVME=/dev/nvme0n1
 
-    mkdir -vp $GLUSTERMNT $APPDATAMNT $MEDIAMNT
+    mkdir -vp $GLUSTERMNT $MEDIAMNT $APPDATAMNT
     chmod -R 755 $GLUSTERMNT
     
     systemctl enable glusterd ; systemctl start glusterd
@@ -189,6 +189,11 @@ gluster volume start appdata-volume
 gluster volume start media-volume
 
 rm \$0
+
+mount -a
+mkdir -p /mnt/gluster/appdata/{caddy,code{/.config,/.local,/project},flame,gitea,nextcloud,pihole{/unbound},plex,radarr,sabnzbd,sonarr,vaultwarden}
+mkdir -p /mnt/gluster/media/usenet/{completed{/movies,/tv},inc}
+chmod -R 777 /mnt/gluster/media
 
 echo $3 | tee /etc/hostname
 reboot
