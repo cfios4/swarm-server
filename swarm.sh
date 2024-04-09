@@ -207,6 +207,25 @@ gluster volume create media-volume swarm1.lan:/mnt/gluster/bricks/media swarm2.l
 gluster volume start appdata-volume
 gluster volume start media-volume
 
+cat <<RCEOF > /etc/rc.local
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+sleep 5 && mount -a 
+
+exit 0
+RCEOF
+
 rm \$0
 
 mount -a
