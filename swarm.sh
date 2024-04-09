@@ -147,7 +147,7 @@ apt-get update -qq ; apt-get upgrade -y 2>&1 > /dev/null
 apt-get install glusterfs-server keepalived sshpass -y -qq
 useradd -m -s /bin/bash -G docker,sudo $1
 echo $1:$2 | chpasswd
-echo -e 'TZ=America/New_York\neval "$(starship init bash)"' >> /home/$1/.bashrc
+echo -e 'TZ=America/New_York\neval "$(starship init bash)"\nPID=$(id -u)\nGID=$(id -g)' >> /home/$1/.bashrc
 echo "##### Gluster and Keepalived installed... #####"
 echo "##### Performing tasks for $3... #####"
 
