@@ -16,6 +16,3 @@ I want to have these stacks deployed like this: `curl https://raw.githubusercont
 
 ## UFW
 `Uncomplicated Firewall` is a simple `iptables` frontend. The provided code should be put into a file at `/etc/ufw/applications.d/ufw-swarmtailscale`, This creates profiles when using `ufw app list` and makes it simpler to allow the correct ports
-
-
-this line is a test
