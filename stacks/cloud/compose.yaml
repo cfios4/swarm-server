@@ -89,6 +89,7 @@ services:
       labels:
         caddy: code.cafio.co
         caddy.reverse_proxy: "{{upstreams 8080}}"
+        caddy.basicauth: /
         caddy.basicauth.swarm: $$2a$$12$$8V1u/O/1LuzQDcV56hxX0ekowne/RKeBi6jlT1vLNo0DkdQbFrnKm
         flame.type: app
         flame.name: VSCode
@@ -101,6 +102,7 @@ services:
       TZ: ${TZ}
       DOCKER_USER: $USER
     volumes:
+      - /mnt/gluster/appdata/code:/root/.config/code-server
       - /mnt/gluster/appdata/code/.local:/home/coder/.local
       - /mnt/gluster/appdata/code/.config:/home/coder/.config
       - /mnt/gluster/appdata/code/project:/home/coder/project
