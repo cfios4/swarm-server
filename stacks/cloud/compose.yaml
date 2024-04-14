@@ -103,8 +103,8 @@ services:
       DOCKER_USER: ${USER}
     volumes:
       - /mnt/gluster/appdata/code:/root/.config/code-server
-      - /mnt/gluster/appdata/code/.local:/home/coder/.local
-      - /mnt/gluster/appdata/code/.config:/home/coder/.config
+      - /mnt/gluster/appdata/code/.local:/root/.local
+      - /mnt/gluster/appdata/code/.config:/root/.config
       - /mnt/gluster/appdata/code/project:/home/coder/project
 
   vaultwarden:
