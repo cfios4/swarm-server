@@ -158,8 +158,7 @@ services:
       REVERSE_PROXY_TRUSTED_PROXIES: 127.0.0.0/8,::1/128, 192.168.45.0/24, cafio.co
       EMAIL_DOMAIN_ALLOWLIST: cafio.co
     volumes:
-      - /mnt/gluster/appdata/gitea/config:/data/gitea
-      - /mnt/gluster/appdata/gitea/data:/var/lib/gitea
+      - /mnt/gluster/appdata/gitea:/data
 
 networks:
   overlaynet:
